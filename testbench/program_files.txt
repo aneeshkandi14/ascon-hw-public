@@ -1,0 +1,16 @@
+encryption/ascon_encryption.v
+encryption/ascon_encryption_ti.v
+decryption/ascon_decryption.v
+decryption/ascon_decryption_ti.v
+permutation/ascon_permutation.v
+permutation/ascon_permutation_ti.v
+permutation/linear_layer.v
+permutation/linear_layer_ti.v
+permutation/roundconstant.v
+permutation/roundconstant_ti.v
+permutation/substitution_layer.v
+permutation/substitution_layer_ti.v
+roundcounter.v
+fault_countermeasure.v
+ascon.v
+test_tb.v
