@@ -276,7 +276,7 @@ module Encryption_ti #(
                 P_in_2 = S_2 ^ ({{r{1'b0}}, (key ^ random_key_1 ^ random_key_2),{(c-k){1'b0}}});
 
                 permutation_start = (permutation_ready)? 1'b0: 1'b1;
-                encryption_ready_1 = 1;
+                encryption_ready_1 = 0;
                 Tag_d_0 = P_out_0 ^ random_key_1;
                 Tag_d_1 = P_out_1 ^ random_key_2;
                 Tag_d_2 = P_out_2 ^ (random_key_1 ^ random_key_2 ^ key);
