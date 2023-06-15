@@ -92,7 +92,10 @@ module Encryption_ti #(
     assign P_2 = {(plain_text ^ random_pt_1 ^ random_pt_2), 1'b1, {nz_p{1'b0}}};
 
     assign tag = (encryption_ready_1)? (Tag_0 ^ Tag_1 ^ Tag_2) : 0;
-    assign cipher_text = (encryption_ready_1)? (C_0[Y-1 -: y] ^ C_1[Y-1 -: y] ^ C_2[Y-1 -: y]) : 0;
+    if (y>0)
+        assign cipher_text = (encryption_ready_1)? (C_0[Y-1 -: y] ^ C_1[Y-1 -: y] ^ C_2[Y-1 -: y]) : 0;
+    else
+        assign cipher_text = 0;
 
     // ---------------------------------------------------------------------------------------
     //                                      State Updater
@@ -110,12 +113,20 @@ module Encryption_ti #(
                 
                 INITIALIZE: begin
                     if(permutation_ready)
-                        state <= ASSOCIATED_DATA;
+                        if (l != 0)
+                            state <= ASSOCIATED_DATA;
+                        else if (l == 0 && y != 0)
+                            state <= PTCT;
+                        else 
+                            state <= FINALIZE;
                 end
 
                 ASSOCIATED_DATA: begin
                     if(permutation_ready && block_ctr == s-1)
-                        state <= PTCT;
+                        if (y != 0)
+                            state <= PTCT;
+                        else 
+                            state <= FINALIZE;
                 end
 
                 PTCT: begin

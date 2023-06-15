@@ -24,7 +24,8 @@ module FC #(
     output [127:0]  tag,                    // Final Tag after Encryption 
     output [127:0]  dec_tag,                // Tag after Decryption
     output          encryption_ready,       // To indicate the end of Encryption
-    output          decryption_ready        // To undicate the end of Decryption
+    output          decryption_ready,       // To indicate the end of Decryption
+    output          message_authentication  // Indicates whether the message is authenticated
 );
     
     if(FP == 1) begin
@@ -236,7 +237,8 @@ module FC #(
     assign dec_tag = (tag4 == tag5 || tag5 == tag6)? (tag4 & tag5) ^ (tag5 & tag6) ^ (tag4 & tag6) : fault_constant;
     assign encryption_ready = (er1 == er2 || er2 == er3)? (er1 & er2) ^ (er2 & er3) ^ (er1 & er3) : fault_constant;
     assign decryption_ready = (dr1 == dr2 || dr2 == dr3)? (dr1 & dr2) ^ (dr2 & dr3) ^ (dr1 & dr3) : fault_constant;
-
+    assign message_authentication = (decryption_ready)? (tag1 == tag4): 0;
+    
     end
     
     else begin
@@ -300,11 +302,13 @@ module FC #(
                 associated_data,
                 cipher_text,
                 decryption_start,
-                dec_tag,             
+                dec_plain_text,             
                 dec_tag,                     
                 decryption_ready        
             );
         end
+
+        assign message_authentication = (decryption_ready)? (dec_tag == tag): 0;
     end
         
 endmodule

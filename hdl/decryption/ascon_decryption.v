@@ -56,7 +56,10 @@ module Decryption #(
     assign A = {associated_data, 1'b1, {nz_ad{1'b0}}};
     assign C = {cipher_text, 1'b1, {nz_p{1'b0}}};
     assign tag = (decryption_ready_1)? Tag : 0;
-    assign plain_text = (decryption_ready_1)? P[Y-1 -: y] : 0;
+    if(y>0)
+        assign plain_text = (decryption_ready_1)? P[Y-1 : Y-y] : 0;
+    else
+        assign plain_text = 0;
 
     // FSM States
     parameter IDLE              = 'd0,
@@ -94,7 +97,12 @@ module Decryption #(
                 // Initialization
                 INITIALIZE: begin
                     if(permutation_ready) begin
-                        state <= ASSOCIATED_DATA;
+                        if (l != 0)
+                            state <= ASSOCIATED_DATA;
+                        else if (l == 0 && y != 0)
+                            state <= PTCT;
+                        else
+                            state <= FINALIZE;
                         S <= P_out ^ {{(320-k){1'b0}}, key};
                     end
                 end
@@ -102,7 +110,10 @@ module Decryption #(
                 //Processing Associated Data
                 ASSOCIATED_DATA: begin
                     if(permutation_ready && block_ctr == s-1) begin
-                        state <= PTCT;
+                        if (y != 0)
+                            state <= PTCT;
+                        else
+                            state <= FINALIZE;
                         S <= P_out^({{319{1'b0}}, 1'b1});
                     end
                     
@@ -121,7 +132,8 @@ module Decryption #(
                         if(t!=1)
                             S <= {Sr ^ {P_d[r*t-1:(t-1)*r],P[(t-1)*r-1 -: y-r],1'b1,{(r-y-1){1'b0}}},Sc};
                         else
-                            S <= {Sr ^ {P_d[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc};
+                            if(y>0)
+                                S <= {Sr ^ {P_d[Y-1 : Y-y],1'b1,{(r-y-1){1'b0}}},Sc};
                     end
                     else if(permutation_ready && block_ctr != t)
                         S <= P_out;

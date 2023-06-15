@@ -5,8 +5,8 @@ module Ascon #(
     parameter b = 6,              // Intermediate round no.
     parameter l = 80,            // Length of associated data
     parameter y = 80,             // Length of Plain Text
-    parameter TI = 0,              // 1 for Threshold Implementation; else 0
-    parameter FP = 0               // 1 for Fault Protection; else 0
+    parameter TI = 0,              // 1 for Yes; else No
+    parameter FP = 0               // 1 for Yes; else No
 )(
     input       clk,
     input       rst,
@@ -19,9 +19,11 @@ module Ascon #(
     input [6:0] rxSI,
 
     output reg  cipher_textxSO,
-    output reg  tagxSO,       
+    output reg  plain_textxS0,
+    output reg  tagxSO, dec_tagxSO,      
     output      encryption_readyxSO,
-    output      decryption_readyxSO     //
+    output      decryption_readyxSO,     
+    output      message_authentication   //
 );
     
     reg     [k-1:0]     key,random_key_1,random_key_2;      
@@ -30,7 +32,7 @@ module Ascon #(
     reg     [y-1:0]     plain_text, random_pt_1, random_pt_2;
     wire    [y-1:0]     dec_plain_text;
     reg     [63:0]      r0,r1,r2,r3,r4,r5,r6;
-    reg     [7:0]       i,j;
+    reg     [7:0]       i,j,m;
     wire    [y-1:0]     cipher_text;
     wire    [127:0]     tag, dec_tag;
     wire                ready, encryption_start;
@@ -39,7 +41,11 @@ module Ascon #(
     // Left shift for Inputs
     always @(posedge clk) begin
         if(rst)
-            {key,random_key_1,random_key_2,nonce,random_nonce_1,random_nonce_2,random_ad_1,random_ad_2,associated_data,random_pt_1,random_pt_2,plain_text,i,j} <= 0;
+            {key,random_key_1,random_key_2,
+            nonce,random_nonce_1,random_nonce_2,
+            random_ad_1,random_ad_2,associated_data,
+            random_pt_1,random_pt_2,plain_text,
+            i,j,m} <= 0;
 
         else begin
             if(i < k) begin
@@ -79,15 +85,10 @@ module Ascon #(
             if(i<130)
                 i <= i+1;
         end
-    end
 
-    assign ready = ((i>k) && (i>128) && (i>l) && (i>y))? 1 : 0;
-    assign encryption_start = ready & encryption_startxSI;
-
-    // Right Shift for Outputs 
-    always @(posedge clk) begin
+        // Right Shift for encryption outputs
         if(encryption_ready) begin
-            if(j < l)
+            if(j < y)
                 cipher_textxSO <= cipher_text[j];
             
             if(j < 128)
@@ -96,9 +97,38 @@ module Ascon #(
             if(j < 128)
                 j <= j+1;
         end
+
+        // Right Shift for decryption outputs
+        if(decryption_ready) begin
+            if(message_authentication) begin
+                if(m < y)
+                    plain_textxS0 <= cipher_text[m];
+                
+                if(m < 128)
+                    dec_tagxSO <= dec_tag[m];
+
+                if(m < 128)
+                    m <= m+1;
+            end
+            // If message is not authenticated, then a random message is outputted
+            // Note that the random numbers are re-used in this code
+            else begin
+               if(m < y)
+                    plain_textxS0 <= random_pt_1[m];
+                
+                if(m < 128)
+                    dec_tagxSO <= random_key_1[m];
+
+                if(m < 128)
+                    m <= m+1; 
+            end
+        end
     end
 
-    // assign encryption_readyxSO = ((j>(l-1)) && (j>127))? 1: 0;
+    assign ready = ((i>k) && (i>128) && (i>l) && (i>y))? 1 : 0;
+    assign encryption_start = ready & encryption_startxSI;
+
+    // assign encryption_readyxSO = ((j>(l-1)) && (j>12733  ))? 1: 0;
     assign encryption_readyxSO = encryption_ready;
     assign decryption_readyxSO = decryption_ready;
 
@@ -120,6 +150,7 @@ module Ascon #(
         tag,           
         dec_tag,          
         encryption_ready,
-        decryption_ready
+        decryption_ready,
+        message_authentication
     );
 endmodule
