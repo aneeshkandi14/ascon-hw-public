@@ -15,7 +15,7 @@ This repository contains accompanying HDL codes for the paper **Hardware Impleme
 
 ## Additional Files
 - `Hash` and `Hash_ti` modules contain the ASCON Hash FSM. Source: `hdl/hashing/`
-- The proposed SBOXes for Threshold. Source: `sbox/`
+- The proposed SBOXes for Threshold. Source: `ascon_sbox_ti/`
 
  ## Verifying the Code
 We have used `iverilog` verilog compiler and `gtkwave` tool for viewing the waveforms. The testbench directory contains the testbench, `test_tb.v`, and a bash script to run the test. Ensure all three files are in the same directory as `ascon.v`, and then run the bash script. The results will be copied to a text file where you can see the working. To view the waveforms, uncomment the line `gtkwave test.vcd` in the `run.sh` file.
