@@ -92,7 +92,10 @@ module Decryption_ti #(
     assign C_2 = {(cipher_text ^ random_ct_1 ^ random_ct_2), 1'b1, {nz_p{1'b0}}};
 
     assign tag = (decryption_ready_1)? (Tag_0 ^ Tag_1 ^ Tag_2) : 0;
-    assign plain_text = (decryption_ready_1)? (P_0[Y-1 -: y] ^ P_1[Y-1 -: y] ^ P_2[Y-1 -: y]) : 0;
+    if(y>0)
+        assign plain_text = (decryption_ready_1)? (P_0[Y-1 -: y] ^ P_1[Y-1 -: y] ^ P_2[Y-1 -: y]) : 0;
+    else
+        assign plain_text = 0;
 
     // ---------------------------------------------------------------------------------------
     //                                      State Updater
@@ -110,12 +113,20 @@ module Decryption_ti #(
                 
                 INITIALIZE: begin
                     if(permutation_ready)
-                        state <= ASSOCIATED_DATA;
+                        if (l != 0)
+                            state <= ASSOCIATED_DATA;
+                        else if (l == 0 && y != 0)
+                            state <= PTCT;
+                        else
+                            state <= FINALIZE;
                 end
 
                 ASSOCIATED_DATA: begin
                     if(permutation_ready && block_ctr == s-1)
-                        state <= PTCT;
+                        if (y != 0)
+                            state <= PTCT;
+                        else
+                            state <= FINALIZE;
                 end
 
                 PTCT: begin
@@ -195,9 +206,11 @@ module Decryption_ti #(
                             S_2 <= {Sr_2 ^ {Pd_2[r*t-1:(t-1)*r],P_2[(t-1)*r-1 -: y-r],1'b1,{(r-y-1){1'b0}}},Sc_2};
                         end
                         else begin
-                            S_0 <= {Sr_0 ^ {Pd_0[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc_0};
-                            S_1 <= {Sr_1 ^ {Pd_1[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc_1};
-                            S_2 <= {Sr_2 ^ {Pd_2[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc_2};
+                            if(y>0) begin   
+                                S_0 <= {Sr_0 ^ {Pd_0[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc_0};
+                                S_1 <= {Sr_1 ^ {Pd_1[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc_1};
+                                S_2 <= {Sr_2 ^ {Pd_2[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc_2};
+                            end
                         end
                     end
                     else if(permutation_ready && block_ctr != t) begin

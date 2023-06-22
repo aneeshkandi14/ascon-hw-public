@@ -20,18 +20,23 @@ module FC #(
     input  [63:0]   r0,r1,r2,r3,r4,r5,r6,
 
     output [y-1:0]  cipher_text,            // Plain text converted to cipher text
-    output [y-1:0]  dec_plain_text,
+    output [y-1:0]  dec_plain_text,         // Decrypted Text
     output [127:0]  tag,                    // Final Tag after Encryption 
-    output [127:0]  dec_tag,
+    output [127:0]  dec_tag,                // Tag after Decryption
     output          encryption_ready,       // To indicate the end of Encryption
-    output          decryption_ready        //
+    output          decryption_ready,       // To indicate the end of Decryption
+    output          message_authentication  // Indicates whether the message is authenticated
 );
     
     if(FP == 1) begin
         wire [y-1:0] c1,c2,c3,p1,p2,p3;
         wire [127:0] tag1,tag2,tag3,tag4,tag5,tag6;
         wire er1,er2,er3,dr1,dr2,dr3;
+        wire fault_detect;
         
+        // Comes from a separate source of entropy. Will change everytime
+        localparam fault_constant = 128'h8C784;
+
         if(TI == 1) begin
             Encryption_ti #(
                 k,r,a,b,l,y
@@ -223,14 +228,17 @@ module FC #(
             );
         end
     
+    assign fault_detect = (c1 == c2 || c2 == c3)? 1 : 0;
+    
     // Bitwise Majority function
-    assign cipher_text = (c1 & c2) ^ (c2 & c3) ^ (c1 & c3);
-    assign dec_plain_text = (p1 & p2) ^ (p2 & p3) ^ (p1 & p3);
-    assign tag = (tag1 & tag2) ^ (tag2 & tag3) ^ (tag1 & tag3);
-    assign dec_tag = (tag4 & tag5) ^ (tag5 & tag6) ^ (tag4 & tag6);
-    assign encryption_ready = (er1 & er2) ^ (er2 & er3) ^ (er1 & er3);
-    assign decryption_ready = (dr1 & dr2) ^ (dr2 & dr3) ^ (dr1 & dr3);
-
+    assign cipher_text = (c1 == c2 || c2 == c3)? (c1 & c2) ^ (c2 & c3) ^ (c1 & c3) : fault_constant;
+    assign dec_plain_text = (p1 == p2 || p2 == p3)? (p1 & p2) ^ (p2 & p3) ^ (p1 & p3) : fault_constant;
+    assign tag = (tag1 == tag2 || tag2 == tag3)? (tag1 & tag2) ^ (tag2 & tag3) ^ (tag1 & tag3) : fault_constant;
+    assign dec_tag = (tag4 == tag5 || tag5 == tag6)? (tag4 & tag5) ^ (tag5 & tag6) ^ (tag4 & tag6) : fault_constant;
+    assign encryption_ready = (er1 == er2 || er2 == er3)? (er1 & er2) ^ (er2 & er3) ^ (er1 & er3) : fault_constant;
+    assign decryption_ready = (dr1 == dr2 || dr2 == dr3)? (dr1 & dr2) ^ (dr2 & dr3) ^ (dr1 & dr3) : fault_constant;
+    assign message_authentication = (decryption_ready)? (tag1 == tag4): 0;
+    
     end
     
     else begin
@@ -294,11 +302,13 @@ module FC #(
                 associated_data,
                 cipher_text,
                 decryption_start,
-                dec_tag,             
+                dec_plain_text,             
                 dec_tag,                     
                 decryption_ready        
             );
         end
+
+        assign message_authentication = (decryption_ready)? (dec_tag == tag): 0;
     end
         
 endmodule
