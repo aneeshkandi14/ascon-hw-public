@@ -5,9 +5,9 @@ module test_tb;
     parameter r = 64;            // Rate
     parameter a = 12;             // Initialization round no.
     parameter b = 6;              // Intermediate round no.
-    parameter l = 40;             // Length of associated data
-    parameter y = 40;             // Length of Plain Text
-    parameter TI = 0;
+    parameter l = 0;             // Length of associated data
+    parameter y = 0;             // Length of Plain Text
+    parameter TI = 1;
     parameter FP = 1;
 
     parameter PERIOD = 20;          // Clock frequency
@@ -20,7 +20,9 @@ module test_tb;
     reg [2:0] plain_textxSI;
     reg       encryption_startxSI;
     reg       decryption_startxSI = 0;
-    reg [6:0] rxSI;
+    reg [6:0] r_64xSI;
+    reg [2:0] r_128xSI;
+    reg [2:0] r_ptxSI;
     integer ctr = 0;
     reg [y-1:0] cipher_text, plain_text;
     reg [127:0] tag, dec_tag;
@@ -48,7 +50,9 @@ module test_tb;
         plain_textxSI,
         encryption_startxSI,
         decryption_startxSI,
-        rxSI,
+        r_64xSI,
+        r_128xSI,
+        r_ptxSI,
         cipher_textxSO,
         plain_textxS0,
         tagxSO, dec_tagxSO,
@@ -64,7 +68,7 @@ module test_tb;
     input [127:0] rd, i, key, nonce, ass_data, pt; 
     begin
         @(posedge clk);
-        {rxSI,keyxSI[2:1],associated_dataxSI[2:1],plain_textxSI[2:1],noncexSI[2:1]} = rd;
+        {r_128xSI, r_ptxSI, r_64xSI, keyxSI[2:1], associated_dataxSI[2:1], plain_textxSI[2:1], noncexSI[2:1]} = rd;
         keyxSI[0] = key[k-1-i];
         noncexSI[0] = nonce[127-i];
         plain_textxSI[0] = pt[y-1-i];
