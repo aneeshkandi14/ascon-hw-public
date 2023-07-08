@@ -16,7 +16,9 @@ module Ascon #(
     input [2:0] plain_textxSI,
     input       encryption_startxSI,
     input       decryption_startxSI,
-    input [6:0] rxSI,
+    input [6:0] r_64xSI,
+    input [2:0] r_128xSI,
+    input [2:0] r_ptxSI,
 
     output reg  cipher_textxSO,
     output reg  plain_textxS0,
@@ -32,6 +34,8 @@ module Ascon #(
     reg     [y-1:0]     plain_text, random_pt_1, random_pt_2;
     wire    [y-1:0]     dec_plain_text;
     reg     [63:0]      r0,r1,r2,r3,r4,r5,r6;
+    reg     [127:0]     random_fault_1, random_fault_2, random_dec_1;
+    reg     [y-1:0]     random_fault_3, random_fault_4, random_dec_2;
     reg     [7:0]       i,j,m;
     wire    [y-1:0]     cipher_text;
     wire    [127:0]     tag, dec_tag;
@@ -58,6 +62,9 @@ module Ascon #(
                 nonce <= {nonce[126:0], noncexSI[0]};
                 random_nonce_1 <= {random_nonce_1[126:0], noncexSI[1]};
                 random_nonce_2 <= {random_nonce_2[126:0], noncexSI[2]};
+                random_fault_1 <= {random_fault_1[126:0], r_128xSI[0]};
+                random_fault_2 <= {random_fault_2[126:0], r_128xSI[1]};
+                random_dec_1 <= {random_dec_1[126:0], r_128xSI[2]};
             end
 
             if(i < l) begin
@@ -70,16 +77,19 @@ module Ascon #(
                 plain_text <= {plain_text[y-2:0], plain_textxSI[0]};
                 random_pt_1 <= {random_pt_1[y-2:0], plain_textxSI[1]};
                 random_pt_2 <= {random_pt_2[y-2:0], plain_textxSI[2]};
+                random_fault_3 <= {random_fault_3[y-2:0], r_ptxSI[0]};
+                random_fault_4 <= {random_fault_4[y-2:0], r_ptxSI[1]};
+                random_dec_2 <= {random_dec_2[y-2:0], r_ptxSI[2]};
             end
 
             if(i < 64) begin
-                r0 <= {r0[62:0],rxSI[0]};
-                r1 <= {r1[62:0],rxSI[1]};
-                r2 <= {r2[62:0],rxSI[2]};
-                r3 <= {r3[62:0],rxSI[3]};
-                r4 <= {r4[62:0],rxSI[4]};
-                r5 <= {r5[62:0],rxSI[5]};
-                r6 <= {r6[62:0],rxSI[6]};
+                r0 <= {r0[62:0],r_64xSI[0]};
+                r1 <= {r1[62:0],r_64xSI[1]};
+                r2 <= {r2[62:0],r_64xSI[2]};
+                r3 <= {r3[62:0],r_64xSI[3]};
+                r4 <= {r4[62:0],r_64xSI[4]};
+                r5 <= {r5[62:0],r_64xSI[5]};
+                r6 <= {r6[62:0],r_64xSI[6]};
             end
 
             if(i<130)
@@ -111,13 +121,12 @@ module Ascon #(
                     m <= m+1;
             end
             // If message is not authenticated, then a random message is outputted
-            // Note that the random numbers are re-used in this code
             else begin
                if(m < y)
-                    plain_textxS0 <= random_pt_1[m];
+                    plain_textxS0 <= random_dec_2[m];
                 
                 if(m < 128)
-                    dec_tagxSO <= random_key_1[m];
+                    dec_tagxSO <= random_dec_1[m];
 
                 if(m < 128)
                     m <= m+1; 
@@ -145,6 +154,9 @@ module Ascon #(
         encryption_start,
         decryption_startxSI,
         r0,r1,r2,r3,r4,r5,r6,
+        random_fault_1, random_fault_2,
+        random_fault_3, random_fault_4,
+
         cipher_text,
         dec_plain_text,            
         tag,           
