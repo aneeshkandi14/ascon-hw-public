@@ -5,22 +5,23 @@ module test_tb;
     parameter r = 64;            // Rate
     parameter a = 12;             // Initialization round no.
     parameter b = 6;              // Intermediate round no.
-    parameter l = 0;             // Length of associated data
-    parameter y = 0;             // Length of Plain Text
-    parameter TI = 1;
-    parameter FP = 1;
+    parameter l = 256;             // Length of associated data
+    parameter y = 256;             // Length of Plain Text
+    parameter TI = 0;
+    parameter FP = 0;
 
     parameter PERIOD = 20;          // Clock frequency
+    parameter max = (k>=y && k>=l)? k: ((y>=l)? y: l);
 
     reg       clk = 0;
     reg       rst;
-    reg [2:0] keyxSI;
-    reg [2:0] noncexSI;
-    reg [2:0] associated_dataxSI;
-    reg [2:0] plain_textxSI;
+    reg [4:0] keyxSI;
+    reg [4:0] noncexSI;
+    reg [4:0] associated_dataxSI;
+    reg [4:0] plain_textxSI;
     reg       encryption_startxSI;
     reg       decryption_startxSI = 0;
-    reg [6:0] r_64xSI;
+    reg [13:0] r_64xSI;
     reg [2:0] r_128xSI;
     reg [2:0] r_ptxSI;
     integer ctr = 0;
@@ -33,11 +34,12 @@ module test_tb;
     wire  decryption_readyxSO;
     wire  message_authentication;
     integer check_time;
+    integer flag = 0;
 
-    parameter KEY = 'h7540e9d968c534f3347c799342ed1264;
-    parameter NONCE = 'h3f0a465dfb478805be644a2627f7c7e8;
-    parameter AD = 'h4153434f4e;
-    parameter PT = 'h6173636f6e;
+    parameter KEY = 'h2db083053e848cefa30007336c47a5a1;
+    parameter NONCE = 'h3f3607dbce3503ba84f5843d623de056;
+    parameter AD = 'h0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef;
+    parameter PT = 'h0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef;
 
     Ascon #(
     k,r,a,b,l,y,TI,FP
@@ -65,10 +67,10 @@ module test_tb;
     always #(PERIOD) clk = ~clk;
 
     task write;
-    input [127:0] rd, i, key, nonce, ass_data, pt; 
+    input [max-1:0] rd, i, key, nonce, ass_data, pt; 
     begin
         @(posedge clk);
-        {r_128xSI, r_ptxSI, r_64xSI, keyxSI[2:1], associated_dataxSI[2:1], plain_textxSI[2:1], noncexSI[2:1]} = rd;
+        {r_128xSI, r_ptxSI, r_64xSI, keyxSI[4:1], associated_dataxSI[4:1], plain_textxSI[4:1], noncexSI[4:1]} = rd;
         keyxSI[0] = key[k-1-i];
         noncexSI[0] = nonce[127-i];
         plain_textxSI[0] = pt[y-1-i];
@@ -102,8 +104,8 @@ module test_tb;
         #(1.5*PERIOD)
         rst = 0;
         ctr = 0;
-        repeat(k) begin
-            write($random, ctr, KEY, NONCE, AD, PT);
+        repeat(max) begin
+            write({$random, $random}, ctr, KEY, NONCE, AD, PT);
             ctr = ctr + 1;
         end
         ctr = 0;
@@ -119,11 +121,12 @@ module test_tb;
     end
 
     always @(*) begin
-        if(encryption_readyxSO & !decryption_startxSI) begin
+        if(encryption_readyxSO & flag == 0) begin
+            flag = 1;
             check_time = $time - check_time;
             $display("Encryption Done! It took%d clock cycles", check_time/(2*PERIOD));
             #(4*PERIOD)
-            repeat(k) begin
+            repeat(max) begin
                 read(ctr);
                 ctr = ctr + 1;
             end
@@ -132,13 +135,15 @@ module test_tb;
             decryption_startxSI = 1;
             check_time = $time;
             ctr = 0;
+            #(5*PERIOD)
+            decryption_startxSI = 0;
         end
 
         if (decryption_readyxSO) begin
             check_time = $time - check_time;
             $display("Decryption Done! It took%d clock cycles", check_time/(2*PERIOD));
             #(4*PERIOD)
-            repeat(k) begin
+            repeat(max) begin
                 read_dec(ctr);
                 ctr = ctr + 1;
             end

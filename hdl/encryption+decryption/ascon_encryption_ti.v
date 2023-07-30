@@ -188,6 +188,11 @@ module Encryption_ti #(
                         S_1 <= P_out_1 ^ {{319{1'b0}}, 1'b1};
                         S_2 <= P_out_2 ^ {{319{1'b0}}, 1'b1};
                     end
+                    else if(permutation_ready && block_ctr != s) begin
+                        S_0 <= P_out_0;
+                        S_1 <= P_out_1;
+                        S_2 <= P_out_2;    
+                    end
                     
                     if (permutation_ready && block_ctr == s-1) 
                         block_ctr <= 0;
@@ -198,16 +203,21 @@ module Encryption_ti #(
 
                 // Processing Plain Text
                 PTCT: begin
-                    {C_0, C_1, C_2} <= {Cd_0, Cd_1, Cd_2};
                     if(block_ctr == t-1) begin
-                        S_0 <= {Cd_0[r*t-1:(t-1)*r],Sc_0};
-                        S_1 <= {Cd_1[r*t-1:(t-1)*r],Sc_1};
-                        S_2 <= {Cd_2[r*t-1:(t-1)*r],Sc_2};
+                        S_0 <= {Cd_0[r-1:0],Sc_0};
+                        S_1 <= {Cd_1[r-1:0],Sc_1};
+                        S_2 <= {Cd_2[r-1:0],Sc_2};
+                        C_0 <= C_0 + Cd_0;
+                        C_1 <= C_1 + Cd_1;
+                        C_2 <= C_2 + Cd_2;
                     end
                     else if(permutation_ready && block_ctr != t) begin
                         S_0 <= P_out_0;
                         S_1 <= P_out_1;
                         S_2 <= P_out_2;
+                        C_0 <= C_0 + Cd_0;
+                        C_1 <= C_1 + Cd_1;
+                        C_2 <= C_2 + Cd_2;
                     end
 
                     if (permutation_ready && block_ctr == t-1) 
@@ -259,20 +269,20 @@ module Encryption_ti #(
                 else
                     permutation_start = 1;
 
-                P_in_0 = {Sr_0 ^ A_0[block_ctr*r+:r], Sc_0};
-                P_in_1 = {Sr_1 ^ A_1[block_ctr*r+:r], Sc_1};
-                P_in_2 = {Sr_2 ^ A_2[block_ctr*r+:r], Sc_2};
+                P_in_0 = {Sr_0 ^ A_0[L-1-(block_ctr*r)-:r], Sc_0};
+                P_in_1 = {Sr_1 ^ A_1[L-1-(block_ctr*r)-:r], Sc_1};
+                P_in_2 = {Sr_2 ^ A_2[L-1-(block_ctr*r)-:r], Sc_2};
             end
 
             PTCT: begin
                 rounds = b;
-                Cd_0[block_ctr*r+:r] = Sr_0 ^ P_0[block_ctr*r+:r];
-                Cd_1[block_ctr*r+:r] = Sr_1 ^ P_1[block_ctr*r+:r];
-                Cd_2[block_ctr*r+:r] = Sr_2 ^ P_2[block_ctr*r+:r];
+                Cd_0[Y-1-(block_ctr*r)-:r] = Sr_0 ^ P_0[Y-1-(block_ctr*r)-:r];
+                Cd_1[Y-1-(block_ctr*r)-:r] = Sr_1 ^ P_1[Y-1-(block_ctr*r)-:r];
+                Cd_2[Y-1-(block_ctr*r)-:r] = Sr_2 ^ P_2[Y-1-(block_ctr*r)-:r];
 
-                P_in_0 = {Cd_0[block_ctr*r+:r], Sc_0};
-                P_in_1 = {Cd_1[block_ctr*r+:r], Sc_1};
-                P_in_2 = {Cd_2[block_ctr*r+:r], Sc_2};
+                P_in_0 = {Cd_0[Y-1-(block_ctr*r)-:r], Sc_0};
+                P_in_1 = {Cd_1[Y-1-(block_ctr*r)-:r], Sc_1};
+                P_in_2 = {Cd_2[Y-1-(block_ctr*r)-:r], Sc_2};
 
                 if(block_ctr == (t-1))
                     permutation_start = 0;

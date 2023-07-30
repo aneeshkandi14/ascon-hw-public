@@ -118,8 +118,8 @@ module Encryption #(
                             state <= FINALIZE;
                         S <= P_out^({{319{1'b0}}, 1'b1});
                     end
-                    // else
-                    //     S <= P_out;
+                    else if(permutation_ready && block_ctr != s)
+                        S <= P_out;
                     
                     if (permutation_ready && block_ctr == s-1) 
                         block_ctr <= 0;
@@ -130,13 +130,15 @@ module Encryption #(
 
                 // Processing Plain Text
                 PTCT: begin
-                    C <= C_d;
                     if(block_ctr == t-1) begin
                         state <= FINALIZE;
-                        S <= {C_d[r*t-1:(t-1)*r],Sc};
+                        S <= {C_d[r-1:0],Sc};
+                        C <= C + C_d;
                     end
-                    else if(permutation_ready && block_ctr != t)
+                    else if(permutation_ready && block_ctr != t) begin
                         S <= P_out;
+                        C <= C + C_d;
+                    end
 
                     if (permutation_ready && block_ctr == t-1) 
                         block_ctr <= 0;
@@ -200,15 +202,15 @@ module Encryption #(
                 else
                     permutation_start = 1;
 
-                P_in = {Sr^A[block_ctr*r+:r], Sc};
+                P_in = {Sr^A[L-1-(block_ctr*r)-:r], Sc};
             end
 
             PTCT: begin
                 encryption_ready_1 = 0;
                 rounds = b;
                 Tag_d = 0;
-                C_d[block_ctr*r+:r] = Sr ^ P[block_ctr*r+:r];
-                P_in = {C_d[block_ctr*r+:r], Sc};
+                C_d[Y-1-(block_ctr*r)-:r] = Sr ^ P[Y-1-(block_ctr*r)-:r];
+                P_in = {Sr ^ P[Y-1-(block_ctr*r)-:r], Sc};
                 if(block_ctr == (t-1))
                     permutation_start = 0;
                 else

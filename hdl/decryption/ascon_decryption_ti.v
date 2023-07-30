@@ -41,7 +41,7 @@ module Decryption_ti #(
     parameter IDLE              = 'd0,
               INITIALIZE        = 'd1,
               ASSOCIATED_DATA   = 'd2,
-              PTCT              = 'd3,
+              CTPT              = 'd3,
               FINALIZE          = 'd4, 
               DONE              = 'd5;  
 
@@ -116,7 +116,7 @@ module Decryption_ti #(
                         if (l != 0)
                             state <= ASSOCIATED_DATA;
                         else if (l == 0 && y != 0)
-                            state <= PTCT;
+                            state <= CTPT;
                         else
                             state <= FINALIZE;
                 end
@@ -124,12 +124,12 @@ module Decryption_ti #(
                 ASSOCIATED_DATA: begin
                     if(permutation_ready && block_ctr == s-1)
                         if (y != 0)
-                            state <= PTCT;
+                            state <= CTPT;
                         else
                             state <= FINALIZE;
                 end
 
-                PTCT: begin
+                CTPT: begin
                     if(block_ctr == t-1)
                         state <= FINALIZE;
                 end
@@ -140,7 +140,7 @@ module Decryption_ti #(
                 end
 
                 DONE: begin
-                    if(!decryption_start)
+                    if(decryption_start)
                         state <= IDLE;
                 end
 
@@ -188,7 +188,11 @@ module Decryption_ti #(
                         S_1 <= P_out_1 ^ {{319{1'b0}}, 1'b1};
                         S_2 <= P_out_2 ^ {{319{1'b0}}, 1'b1};
                     end
-                    
+                    else if(permutation_ready && block_ctr != s)
+                        S_0 <= P_out_0;
+                        S_1 <= P_out_1;
+                        S_2 <= P_out_2;
+
                     if (permutation_ready && block_ctr == s-1) 
                         block_ctr <= 0;
                     else if(permutation_ready && block_ctr != s)
@@ -197,26 +201,29 @@ module Decryption_ti #(
                 end
 
                 // Processing Plain Text
-                PTCT: begin
-                    {P_0, P_1, P_2} <= {Pd_0, Pd_1, Pd_2};
+                CTPT: begin
                     if(block_ctr == t-1) begin
-                        if(t!=1) begin
-                            S_0 <= {Sr_0 ^ {Pd_0[r*t-1:(t-1)*r],P_0[(t-1)*r-1 -: y-r],1'b1,{(r-y-1){1'b0}}},Sc_0};
-                            S_1 <= {Sr_1 ^ {Pd_1[r*t-1:(t-1)*r],P_1[(t-1)*r-1 -: y-r],1'b1,{(r-y-1){1'b0}}},Sc_1};
-                            S_2 <= {Sr_2 ^ {Pd_2[r*t-1:(t-1)*r],P_2[(t-1)*r-1 -: y-r],1'b1,{(r-y-1){1'b0}}},Sc_2};
+                        if(y > 0 && y%r != 0) begin
+                            S_0 <= {(Sr_0 ^ {Pd_0[r-1 -: y%r], 1'b1, {(r-1-y%r){1'b0}}}), Sc_0};
+                            S_1 <= {(Sr_1 ^ {Pd_1[r-1 -: y%r], 1'b1, {(r-1-y%r){1'b0}}}), Sc_1};
+                            S_2 <= {(Sr_2 ^ {Pd_2[r-1 -: y%r], 1'b1, {(r-1-y%r){1'b0}}}), Sc_2};
                         end
-                        else begin
-                            if(y>0) begin   
-                                S_0 <= {Sr_0 ^ {Pd_0[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc_0};
-                                S_1 <= {Sr_1 ^ {Pd_1[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc_1};
-                                S_2 <= {Sr_2 ^ {Pd_2[Y-1 -: y],1'b1,{(r-y-1){1'b0}}},Sc_2};
-                            end
+                        else if (y > 0 && y%r == 0) begin
+                            S_0 <= {(Sr_0 ^ {1'b0, 1'b1, {(r-1-y%r){1'b0}}}), Sc_0};
+                            S_1 <= {(Sr_1 ^ {1'b0, 1'b1, {(r-1-y%r){1'b0}}}), Sc_1};
+                            S_2 <= {(Sr_2 ^ {1'b0, 1'b1, {(r-1-y%r){1'b0}}}), Sc_2};
                         end
+                        P_0 <= P_0 + Pd_0;
+                        P_1 <= P_1 + Pd_1;
+                        P_2 <= P_2 + Pd_2;
                     end
                     else if(permutation_ready && block_ctr != t) begin
                         S_0 <= P_out_0;
                         S_1 <= P_out_1;
                         S_2 <= P_out_2;
+                        P_0 <= P_0 + Pd_0;
+                        P_1 <= P_1 + Pd_1;
+                        P_2 <= P_2 + Pd_2;
                     end
 
                     if (permutation_ready && block_ctr == t-1) 
@@ -233,7 +240,6 @@ module Decryption_ti #(
                         S_2 <= P_out_2;
                         {Tag_0, Tag_1, Tag_2} <= {Tag_d_0, Tag_d_1, Tag_d_2};
                     end
-
                 end
             endcase
         end
@@ -268,20 +274,20 @@ module Decryption_ti #(
                 else
                     permutation_start = 1;
 
-                P_in_0 = {Sr_0 ^ A_0[block_ctr*r+:r], Sc_0};
-                P_in_1 = {Sr_1 ^ A_1[block_ctr*r+:r], Sc_1};
-                P_in_2 = {Sr_2 ^ A_2[block_ctr*r+:r], Sc_2};
+                P_in_0 = {Sr_0 ^ A_0[L-1-(block_ctr*r)-:r], Sc_0};
+                P_in_1 = {Sr_1 ^ A_1[L-1-(block_ctr*r)-:r], Sc_1};
+                P_in_2 = {Sr_2 ^ A_2[L-1-(block_ctr*r)-:r], Sc_2};
             end
 
-            PTCT: begin
+            CTPT: begin
                 rounds = b;
-                Pd_0[block_ctr*r+:r] = Sr_0 ^ C_0[block_ctr*r+:r];
-                Pd_1[block_ctr*r+:r] = Sr_1 ^ C_1[block_ctr*r+:r];
-                Pd_2[block_ctr*r+:r] = Sr_2 ^ C_2[block_ctr*r+:r];
+                Pd_0[Y-1-(block_ctr*r)-:r] = Sr_0 ^ C_0[Y-1-(block_ctr*r)-:r];
+                Pd_1[Y-1-(block_ctr*r)-:r] = Sr_1 ^ C_1[Y-1-(block_ctr*r)-:r];
+                Pd_2[Y-1-(block_ctr*r)-:r] = Sr_2 ^ C_2[Y-1-(block_ctr*r)-:r];
 
-                P_in_0 = {C_0[block_ctr*r+:r], Sc_0};
-                P_in_1 = {C_1[block_ctr*r+:r], Sc_1};
-                P_in_2 = {C_2[block_ctr*r+:r], Sc_2};
+                P_in_0 = {C_0[Y-1-(block_ctr*r)-:r], Sc_0};
+                P_in_1 = {C_1[Y-1-(block_ctr*r)-:r], Sc_1};
+                P_in_2 = {C_2[Y-1-(block_ctr*r)-:r], Sc_2};
 
                 if(block_ctr == (t-1))
                     permutation_start = 0;

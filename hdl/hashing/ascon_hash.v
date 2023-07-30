@@ -1,186 +1,88 @@
-module Hash #(
+module Ascon #(
     parameter k = 128,
     parameter r = 64,
     parameter a = 12,
     parameter b = 12,
     parameter h = 256,
     parameter l = 256,
-    parameter y = 40
-) (
-    input clk,
-    input rst,
-    input [y-1:0] message,
-    input start,
+    parameter y = 40,
+    parameter TI = 0,              // 1 for Yes; else No
+    parameter FP = 0               // 1 for Yes; else No
+)(
+    input       clk,
+    input       rst,
+    input [2:0] messagexSI,
+    input       startxSI,
+    input [6:0] r_64xSI,
+    input       r_faultxSI,
 
-    output ready,
-    output [l-1:0] hash
+    output reg  hash_textxSO,
+    output      readyxSO //
 );
-    // Constants
-    localparam c = 320-r;
-    localparam nz_m = ((y+1)%r == 0)? 0 : r-((y+1)%r);
-    localparam Y = y+1+nz_m;
-    localparam s = Y/r;
-    localparam t = l/r;
 
-    // FSM States
-    localparam IDLE = 'd0;
-    localparam INITIALIZE = 'd1;
-    localparam ABSORB = 'd2;
-    localparam SQUEEZE = 'd3;
-    localparam DONE = 'd4;
+    reg     [y-1:0]     message, random_m1, random_m2;
+    reg     [63:0]      r0,r1,r2,r3,r4,r5,r6;
+    reg     [31:0]      i,j;
+    reg     [l-1:0]     random_fault;
+    wire    [l-1:0]     hash_text;
+    wire                ready_1, ready, start;
+    wire                permutation_ready, permutation_start;
 
-    // Buffer Variables
-    wire [63:0] IV;
-    wire [r-1:0] Sr;
-    wire [c-1:0] Sc;
-    reg [319:0] S;
-    reg [2:0] state;
-    reg [4:0] rounds;
-    wire [4:0] ctr;
-    wire permutation_ready;
-    reg permutation_start;
-    reg [319:0] P_in;
-    wire [319:0] P_out;
-    reg [t:0] block_ctr;
-    wire [Y-1:0] M;
-    reg [h-1:0] H;
-    reg ready_1;
-
-    // Assignments
-    assign {Sr, Sc} = S;
-    assign IV = r << 48 | a << 40 | (a-b) << 12 | h;
-    // assign IV = 'h00400c0000000100;
-    assign M = {message, 1'b1, {nz_m{1'b0}}};
-    assign hash = ready? H[h-1 -: l] : 0;
-    assign ready = ready_1;
-
+    // Left shift for Inputs
     always @(posedge clk) begin
-        if(rst) begin
-            state <= IDLE;
-            S <= 0;
-            ready_1 <= 0;
-            H <= 0;
-            block_ctr <= 0;
-        end
+        if(rst)
+            {message, random_m1, random_m2,
+            r0,r1,r2,r3,r4,r5,r6,
+            i, j} <= 0;
+
         else begin
-            case (state)
+            if(i < y) begin
+                message <= {message[y-2:0], messagexSI[0]};
+                random_m1 <= {random_m1[y-2:0], messagexSI[1]};
+                random_m2 <= {random_m2[y-2:0], messagexSI[2]};
+            end
 
-                // Idle Stage
-                IDLE: begin
-                    S <= {IV, {c{1'b0}}};
-                    ready_1 <= 0;
-                    if(start)
-                        state <= INITIALIZE;
-                end 
+            if(i < l) 
+                random_fault <= {random_fault[l-2:0], r_faultxSI};
 
-                // Initialization
-                INITIALIZE: begin
-                    if(permutation_ready) begin
-                        state <= ABSORB;
-                        S <= P_out;
-                    end
-                end
+            if(i < 64) begin
+                r0 <= {r0[62:0],r_64xSI[0]};
+                r1 <= {r1[62:0],r_64xSI[1]};
+                r2 <= {r2[62:0],r_64xSI[2]};
+                r3 <= {r3[62:0],r_64xSI[3]};
+                r4 <= {r4[62:0],r_64xSI[4]};
+                r5 <= {r5[62:0],r_64xSI[5]};
+                r6 <= {r6[62:0],r_64xSI[6]};
+            end
 
-                // Absorb Message
-                ABSORB: begin
-                    if(block_ctr == s-1) begin
-                        state <= SQUEEZE;
-                        $display("%h",M[r*s-1 -: r]);
-                        S <= {Sr ^ M[r*s-1 -: r], Sc};
-                    end
-                    else if(permutation_ready && block_ctr != s)
-                        S <= P_out;
+            i <= i+1;
+        end
 
-                    if (permutation_ready && block_ctr == s-1) 
-                        block_ctr <= 0;
-                    else if(permutation_ready && block_ctr != s)
-                        block_ctr <= block_ctr + 1; 
-                end
+        // Right Shift for encryption outputs
+        if(ready) begin
+            if(j < l)
+                hash_textxSO <= hash_text[j];
 
-                // Squeeze Hash
-                SQUEEZE: begin
-                    if(permutation_ready && block_ctr == t) begin
-                        state <= DONE;
-                        block_ctr <= 0;
-                    end
-                    else if(permutation_ready && block_ctr == 0) begin
-                        S <= P_out;
-                        H[t*r-1 -: r] <= P_out[319 -: r];
-                        block_ctr <= block_ctr + 1;
-                    end
-                    else if(permutation_ready && block_ctr < t) begin
-                        S <= P_out;
-                        H[(t-block_ctr)*r-1 -: r] <= P_out[319 -: r];
-                        block_ctr <= block_ctr + 1;
-                    end
-                end
-
-                // Done Stage
-                DONE: begin
-                    ready_1 <= 1;
-                    if(start)
-                        state <= IDLE;
-                end
-
-                default: state <= IDLE;
-            endcase
+            j <= j + 1;
         end
     end
 
-    always @(*) begin
+    assign ready_1 = ((i>y) && (i>l) && (i>64))? 1 : 0;
+    assign start = ready_1 & startxSI;
+    assign readyxSO = ready;
 
-        // Default Values
-        P_in = 0;
-        rounds = a;
-        permutation_start = 0;
+    // Instantiating Fault Countermeasure module
+    FC #(
+        k,r,a,b,h,l,y,TI,FP
+    ) f(
+            clk,
+            rst,
+            message, random_m1, random_m2,
+            start,
+            r0,r1,r2,r3,r4,r5,r6,
+            random_fault,
 
-        case (state)
-            INITIALIZE: begin
-                P_in = S;
-                rounds = a;
-                permutation_start = (permutation_ready)? 1'b0: 1'b1;
-            end
-
-            ABSORB: begin
-                P_in = {Sr^M[(s-block_ctr)*r-1 -: r], Sc};
-                rounds = b;
-                if(block_ctr == s-1)
-                    permutation_start = 0;
-                else
-                    permutation_start = 1;
-            end
-
-            SQUEEZE: begin
-                P_in = S;
-                if(block_ctr == 0)
-                    rounds = a;
-                else
-                    rounds = b;
-                permutation_start = 1;
-            end
-
-        endcase
-    end
-
-    // Permutation Block
-    Permutation p1(
-        .clk(clk),
-        .reset(rst),
-        .S(P_in),
-        .out(P_out),
-        .done(permutation_ready),
-        .ctr(ctr),
-        .rounds(rounds),
-        .start(permutation_start)
+            hash_text,
+            ready
     );
-
-    // Round Counter
-    RoundCounter RC(
-        clk,
-        rst,
-        permutation_start,
-        permutation_ready,
-        ctr
-    );
-
 endmodule

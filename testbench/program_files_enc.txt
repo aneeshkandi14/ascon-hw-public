@@ -1,7 +1,7 @@
-../hdl/encryption+decryption/ascon_encryption.v
-../hdl/encryption+decryption/ascon_encryption_ti.v
-../hdl/encryption+decryption/ascon_decryption.v
-../hdl/encryption+decryption/ascon_decryption_ti.v
+../hdl/encryption/ascon_encryption.v
+../hdl/encryption/ascon_encryption_ti.v
+../hdl/encryption/ascon_enc.v
+../hdl/encryption/fc_enc.v
 ../hdl/permutation/ascon_permutation.v
 ../hdl/permutation/ascon_permutation_ti.v
 ../hdl/permutation/linear_layer.v
@@ -11,6 +11,4 @@
 ../hdl/permutation/substitution_layer.v
 ../hdl/permutation/substitution_layer_ti.v
 ../hdl/roundcounter.v
-../hdl/encryption+decryption/fault_countermeasure.v
-../hdl/encryption+decryption/ascon.v
-tb_enc+dec.v
+tb_encryption.v

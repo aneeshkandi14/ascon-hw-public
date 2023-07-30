@@ -65,7 +65,7 @@ module Decryption #(
     parameter IDLE              = 'd0,
               INITIALIZE        = 'd1,
               ASSOCIATED_DATA   = 'd2,
-              PTCT              = 'd3,
+              CTPT              = 'd3,
               FINALIZE          = 'd4, 
               DONE              = 'd5;  
     reg [2:0] state;
@@ -100,7 +100,7 @@ module Decryption #(
                         if (l != 0)
                             state <= ASSOCIATED_DATA;
                         else if (l == 0 && y != 0)
-                            state <= PTCT;
+                            state <= CTPT;
                         else
                             state <= FINALIZE;
                         S <= P_out ^ {{(320-k){1'b0}}, key};
@@ -111,11 +111,13 @@ module Decryption #(
                 ASSOCIATED_DATA: begin
                     if(permutation_ready && block_ctr == s-1) begin
                         if (y != 0)
-                            state <= PTCT;
+                            state <= CTPT;
                         else
                             state <= FINALIZE;
                         S <= P_out^({{319{1'b0}}, 1'b1});
                     end
+                    else if(permutation_ready && block_ctr != s)
+                        S <= P_out;
                     
                     if (permutation_ready && block_ctr == s-1) 
                         block_ctr <= 0;
@@ -125,18 +127,19 @@ module Decryption #(
                 end
 
                 // Processing Plain Text
-                PTCT: begin
-                    P <= P_d;
+                CTPT: begin
                     if(block_ctr == t-1) begin
                         state <= FINALIZE;
-                        if(t!=1)
-                            S <= {Sr ^ {P_d[r*t-1:(t-1)*r],P[(t-1)*r-1 -: y-r],1'b1,{(r-y-1){1'b0}}},Sc};
-                        else
-                            if(y>0)
-                                S <= {Sr ^ {P_d[Y-1 : Y-y],1'b1,{(r-y-1){1'b0}}},Sc};
+                        if (y > 0 && y%r != 0) 
+                            S <= {(Sr ^ {P_d[r-1 -: y%r], 1'b1, {(r-1-y%r){1'b0}}}), Sc};
+                        else if (y > 0 && y%r == 0)
+                            S <= {(Sr ^ {1'b0, 1'b1, {(r-1-y%r){1'b0}}}), Sc};
+                        P <= P + P_d;
                     end
-                    else if(permutation_ready && block_ctr != t)
+                    else if(permutation_ready && block_ctr != t) begin
                         S <= P_out;
+                        P <= P + P_d;
+                    end
 
                     if (permutation_ready && block_ctr == t-1) 
                         block_ctr <= 0;
@@ -155,7 +158,7 @@ module Decryption #(
 
                 // Done Stage
                 DONE: begin
-                    if(!decryption_start)
+                    if(decryption_start)
                         state <= IDLE;
                 end
 
@@ -200,15 +203,15 @@ module Decryption #(
                 else
                     permutation_start = 1;
 
-                P_in = {Sr^A[block_ctr*r+:r], Sc};
+                P_in = {Sr^A[L-1-(block_ctr*r)-:r], Sc};
             end
 
-            PTCT: begin
+            CTPT: begin
                 decryption_ready_1 = 0;
                 rounds = b;
                 Tag_d = 0;
-                P_d[block_ctr*r+:r] = Sr ^ C[block_ctr*r+:r];
-                P_in = {C[block_ctr*r+:r], Sc};
+                P_d[Y-1-(block_ctr*r)-:r] = Sr ^ C[Y-1-(block_ctr*r)-:r];
+                P_in = {C[Y-1-(block_ctr*r)-:r], Sc};
                 if(block_ctr == (t-1))
                     permutation_start = 0;
                 else
