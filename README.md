@@ -18,6 +18,6 @@ This repository contains accompanying HDL codes for the paper **Hardware Impleme
 - The proposed SBOXes for Threshold. Source: `ascon_sbox_ti/`
 
  ## Verifying the Code
-We have used `iverilog` verilog compiler and `gtkwave` tool for viewing the waveforms. The testbench directory contains the testbench, `test_tb.v`, and a bash script to run the test. Ensure all three files are in the same directory as `ascon.v`, and then run the bash script. The results will be copied to a text file where you can see the working. To view the waveforms, uncomment the line `gtkwave test.vcd` in the `run.sh` file.
+We have used `iverilog` verilog compiler and `gtkwave` tool for viewing the waveforms. The testbench directory contains the testbench, `tb_enc+dec.v`, and a bash script to run the test. Ensure all three files are in the same directory as `ascon.v`, and then run the bash script. The results will be copied to a text file where you can see the working. To view the waveforms, uncomment the line `gtkwave test.vcd` in the `run.sh` file.
 
-The configuration of the ASCON variant can be changed by changing the different parameters in the `test_tb.v` file. The key, nonce, associated_data and plain_text values can also be changed in the same file. 
+The configuration of the ASCON variant can be changed by changing the different parameters in the `tb_enc+dec.v` file. The key, nonce, associated_data and plain_text values can also be changed in the same file. 
