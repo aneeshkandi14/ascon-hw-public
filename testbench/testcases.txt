@@ -1,5 +1,8 @@
-VCD info: dumpfile test.vcd opened for output.
-Start!
+Associated Data: "ASCON"
+AD Length: 40 bits
+
+Message: "ascon"
+PT Length: 40 bits
 Key:	7540e9d968c534f3347c799342ed1264
 Nonce:	3f0a465dfb478805be644a2627f7c7e8
 AD:	4153434f4e
@@ -12,44 +15,44 @@ PT:	a8ded321e8
 Tag:	79e530fd5393e8bbe34d125feb62fa1d
 Is message authenticated?:	1
 
-VCD info: dumpfile test.vcd opened for output.
-Start!
-Key:	7540e9d968c534f3347c799342ed1264
-Nonce:	3f0a465dfb478805be644a2627f7c7e8
-AD:	0
-PT:	6173636f6e
-Encryption Done! It took         31 clock cycles
-CT:	96d33c2a61
-Tag:	bf0726630152a8fdeb04253edd01bf33
-Decryption Done! It took         30 clock cycles
-PT:	96d33c2a61
-Tag:	bf0726630152a8fdeb04253edd01bf33
-Is message authenticated?:	1
-
-VCD info: dumpfile test.vcd opened for output.
-Start!
-Key:	7540e9d968c534f3347c799342ed1264
-Nonce:	3f0a465dfb478805be644a2627f7c7e8
+Message: "encryption"
+PT Length: 80 bits
+Key:	2db083053e848cefa30007336c47a5a1
+Nonce:	3f3607dbce3503ba84f5843d623de056
 AD:	4153434f4e
-PT:	0
-Encryption Done! It took         38 clock cycles
-CT:	x
-Tag:	8424b59e3106af35a411b53832131ab4
-Decryption Done! It took         37 clock cycles
-PT:	x
-Tag:	8424b59e3106af35a411b53832131ab4
+PT:	656e6372797074696f6e
+Encryption Done! It took         47 clock cycles
+CT:	87a59a2ea49b233259e3
+Tag:	402afdb55e031ce7ddef99b7f7709d1c
+Decryption Done! It took         46 clock cycles
+PT:	656e6372797074696f6e
+Tag:	402afdb55e031ce7ddef99b7f7709d1c
 Is message authenticated?:	1
 
-VCD info: dumpfile test.vcd opened for output.
-Start!
-Key:	7540e9d968c534f3347c799342ed1264
-Nonce:	3f0a465dfb478805be644a2627f7c7e8
-AD:	0
-PT:	0
-Encryption Done! It took         30 clock cycles
-CT:	x
-Tag:	fc5a460425191ea7efb94550dc95f1ca
-Decryption Done! It took         29 clock cycles
-PT:	x
-Tag:	fc5a460425191ea7efb94550dc95f1ca
+Message: "decryption"
+PT Length: 80 bits!
+Key:	cfbd99ce203c63d00bfee29edef2cfe6
+Nonce:	242854af6515a30fc8df32f1263e0007
+AD:	4153434f4e
+PT:	64656372797074696f6e
+Encryption Done! It took         47 clock cycles
+CT:	4c8d7a7a82dc5324351e
+Tag:	63a92920c6f8ca69768cce584c08f906
+Decryption Done! It took         46 clock cycles
+PT:	64656372797074696f6e
+Tag:	63a92920c6f8ca69768cce584c08f906
+Is message authenticated?:	1
+
+Message: "Hello World!"
+PT Length: 96 bits
+Key:	5362006eff0b33bc8bb9950abdb242fc
+Nonce:	1ccfafbc6dc738283ca9fe21ce0fccaa
+AD:	4153434f4e
+PT:	48656c6c6f20576f726c6421
+Encryption Done! It took         47 clock cycles
+CT:	24cefa36227cb37b5149860a
+Tag:	579c9a31342638cddeadedc34d9ce2b3
+Decryption Done! It took         46 clock cycles
+PT:	48656c6c6f20576f726c6421
+Tag:	579c9a31342638cddeadedc34d9ce2b3
 Is message authenticated?:	1

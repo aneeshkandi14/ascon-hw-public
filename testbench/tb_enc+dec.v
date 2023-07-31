@@ -5,8 +5,8 @@ module test_tb;
     parameter r = 64;            // Rate
     parameter a = 12;             // Initialization round no.
     parameter b = 6;              // Intermediate round no.
-    parameter l = 256;             // Length of associated data
-    parameter y = 256;             // Length of Plain Text
+    parameter l = 40;             // Length of associated data
+    parameter y = 96;             // Length of Plain Text
     parameter TI = 0;
     parameter FP = 0;
 
@@ -36,10 +36,10 @@ module test_tb;
     integer check_time;
     integer flag = 0;
 
-    parameter KEY = 'h2db083053e848cefa30007336c47a5a1;
-    parameter NONCE = 'h3f3607dbce3503ba84f5843d623de056;
-    parameter AD = 'h0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef;
-    parameter PT = 'h0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef;
+    parameter KEY = 'h5362006eff0b33bc8bb9950abdb242fc;
+    parameter NONCE = 'h1ccfafbc6dc738283ca9fe21ce0fccaa;
+    parameter AD = 'h4153434f4e;
+    parameter PT = 'h48656c6c6f20576f726c6421;
 
     Ascon #(
     k,r,a,b,l,y,TI,FP
