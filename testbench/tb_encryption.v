@@ -1,17 +1,17 @@
 `timescale 1ns/1ns
 module tb_encryption;
 
-    parameter k = 128;            // Key size
-    parameter r = 64;            // Rate
-    parameter a = 12;             // Initialization round no.
-    parameter b = 6;              // Intermediate round no.
-    parameter l = 40;             // Length of associated data
-    parameter y = 40;             // Length of Plain Text
-    parameter TI = 1;
-    parameter FP = 1;
+    // parameter k = 128;            // Key size
+    // parameter r = 64;            // Rate
+    // parameter a = 12;             // Initialization round no.
+    // parameter b = 6;              // Intermediate round no.
+    // parameter l = 40;             // Length of associated data
+    // parameter y = 40;             // Length of Plain Text
+    // parameter TI = 1;
+    // parameter FP = 1;
 
     parameter PERIOD = 20;          // Clock frequency
-    parameter max = (k>y && k>l)? k: ((y>l)? y: l);
+    parameter max = (`k>=`y && `k>=`l)? `k: ((`y>=`l)? `y: `l);
 
     reg       clk = 0;
     reg       rst;
@@ -24,7 +24,7 @@ module tb_encryption;
     reg       r_128xSI;
     reg       r_ptxSI;
     integer ctr = 0;
-    reg [y-1:0] cipher_text;
+    reg [`y-1:0] cipher_text;
     reg [127:0] tag;
 
     wire  cipher_textxSO;
@@ -32,13 +32,13 @@ module tb_encryption;
     wire  encryption_readyxSO;
     integer check_time;
 
-    parameter KEY = 'h2db083053e848cefa30007336c47a5a1;
-    parameter NONCE = 'h3f3607dbce3503ba84f5843d623de056;
-    parameter AD = 'h4153434f4e;
-    parameter PT = 'h6173636f6e;
+    // parameter KEY = 'h2db083053e848cefa30007336c47a5a1;
+    // parameter NONCE = 'h3f3607dbce3503ba84f5843d623de056;
+    // parameter AD = 'h4153434f4e;
+    // parameter PT = 'h6173636f6e;
 
     Ascon #(
-    k,r,a,b,l,y,TI,FP
+        `k,`r,`a,`b,`l,`y,`TI,`FP
     ) uut (
         clk,
         rst,
@@ -63,10 +63,10 @@ module tb_encryption;
     begin
         @(posedge clk);
         {r_128xSI, r_ptxSI, r_64xSI, keyxSI[2:1], associated_dataxSI[2:1], plain_textxSI[2:1], noncexSI[2:1]} = rd;
-        keyxSI[0] = key[k-1-i];
+        keyxSI[0] = key[`k-1-i];
         noncexSI[0] = nonce[127-i];
-        plain_textxSI[0] = pt[y-1-i];
-        associated_dataxSI[0] = ass_data[l-1-i];
+        plain_textxSI[0] = pt[`y-1-i];
+        associated_dataxSI[0] = ass_data[`l-1-i];
     end
     endtask
 
@@ -88,7 +88,7 @@ module tb_encryption;
         rst = 0;
         ctr = 0;
         repeat(max) begin
-            write($random, ctr, KEY, NONCE, AD, PT);
+            write($random, ctr, `KEY, `NONCE, `AD, `PT);
             ctr = ctr + 1;
         end
         ctr = 0;

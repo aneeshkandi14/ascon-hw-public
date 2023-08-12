@@ -1,18 +1,18 @@
 `timescale 1ns/1ns
 module tb_hash;
 
-    parameter k = 0;
-    parameter r = 64;
-    parameter a = 12;
-    parameter b = 12;
-    parameter h = 256;
-    parameter l = 256;
-    parameter y = 40;
-    parameter TI = 0;
-    parameter FP = 0;
+    // parameter k = 0;
+    // parameter r = 64;
+    // parameter a = 12;
+    // parameter b = 12;
+    // parameter h = 256;
+    // parameter l = 256;
+    // parameter y = 80;
+    // parameter TI = 1;
+    // parameter FP = 0;
 
     parameter PERIOD = 20;          // Clock frequency
-    parameter max = (h>=y && h>=l)? h: ((y>=l)? y: l);
+    parameter max = (`h>=`y && `h>=`l)? `h: ((`y>=`l)? `y: `l);
 
     reg       clk = 0;
     reg       rst;
@@ -21,16 +21,16 @@ module tb_hash;
     reg [6:0] r_64xSI;
     reg       r_faultxSI;
     integer ctr = 0;
-    reg [l-1:0] hash_text;
+    reg [`l-1:0] hash_text;
 
     wire  hash_textxSO;
     wire  readyxSO;
     integer check_time;
 
-    parameter MESSAGE = 'h6173636f6e;
+    // parameter MESSAGE = 'h656e6372797074696f6e;
 
     Ascon #(
-        k,r,a,b,h,l,y,TI,FP
+        `r,`a,`b,`h,`l,`y,`TI,`FP
     ) uut (
         clk,
         rst,
@@ -51,7 +51,7 @@ module tb_hash;
     begin
         @(posedge clk);
         {r_faultxSI, r_64xSI, messagexSI[2:1]} = rd;
-        messagexSI[0] = mes[y-1-i];
+        messagexSI[0] = mes[`y-1-i];
     end
     endtask
 
@@ -72,7 +72,7 @@ module tb_hash;
         rst = 0;
         ctr = 0;
         repeat(max) begin
-            write($random, ctr, MESSAGE);
+            write($random, ctr, `MESSAGE);
             ctr = ctr + 1;
         end
         ctr = 0;

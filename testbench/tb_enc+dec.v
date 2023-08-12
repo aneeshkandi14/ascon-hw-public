@@ -1,17 +1,17 @@
 `timescale 1ns/1ns
-module test_tb;
+module tb_enc_dec;
 
-    parameter k = 128;            // Key size
-    parameter r = 64;            // Rate
-    parameter a = 12;             // Initialization round no.
-    parameter b = 6;              // Intermediate round no.
-    parameter l = 40;             // Length of associated data
-    parameter y = 96;             // Length of Plain Text
-    parameter TI = 0;
-    parameter FP = 0;
+    // parameter k = 128;            // Key size
+    // parameter r = 64;            // Rate
+    // parameter a = 12;             // Initialization round no.
+    // parameter b = 6;              // Intermediate round no.
+    // parameter l = 40;             // Length of associated data
+    // parameter y = 96;             // Length of Plain Text
+    // parameter TI = 0;
+    // parameter FP = 0;
 
     parameter PERIOD = 20;          // Clock frequency
-    parameter max = (k>=y && k>=l)? k: ((y>=l)? y: l);
+    parameter max = (`k>=`y && `k>=`l)? `k: ((`y>=`l)? `y: `l);
 
     reg       clk = 0;
     reg       rst;
@@ -25,7 +25,7 @@ module test_tb;
     reg [2:0] r_128xSI;
     reg [2:0] r_ptxSI;
     integer ctr = 0;
-    reg [y-1:0] cipher_text, plain_text;
+    reg [`y-1:0] cipher_text, plain_text;
     reg [127:0] tag, dec_tag;
 
     wire  cipher_textxSO, plain_textxS0;
@@ -36,13 +36,13 @@ module test_tb;
     integer check_time;
     integer flag = 0;
 
-    parameter KEY = 'h5362006eff0b33bc8bb9950abdb242fc;
-    parameter NONCE = 'h1ccfafbc6dc738283ca9fe21ce0fccaa;
-    parameter AD = 'h4153434f4e;
-    parameter PT = 'h48656c6c6f20576f726c6421;
+    // parameter KEY = 'h5362006eff0b33bc8bb9950abdb242fc;
+    // parameter NONCE = 'h1ccfafbc6dc738283ca9fe21ce0fccaa;
+    // parameter AD = 'h4153434f4e;
+    // parameter PT = 'h48656c6c6f20576f726c6421;
 
     Ascon #(
-    k,r,a,b,l,y,TI,FP
+        `k,`r,`a,`b,`l,`y,`TI,`FP
     ) uut (
         clk,
         rst,
@@ -71,10 +71,10 @@ module test_tb;
     begin
         @(posedge clk);
         {r_128xSI, r_ptxSI, r_64xSI, keyxSI[4:1], associated_dataxSI[4:1], plain_textxSI[4:1], noncexSI[4:1]} = rd;
-        keyxSI[0] = key[k-1-i];
+        keyxSI[0] = key[`k-1-i];
         noncexSI[0] = nonce[127-i];
-        plain_textxSI[0] = pt[y-1-i];
-        associated_dataxSI[0] = ass_data[l-1-i];
+        plain_textxSI[0] = pt[`y-1-i];
+        associated_dataxSI[0] = ass_data[`l-1-i];
     end
     endtask
 
@@ -105,7 +105,7 @@ module test_tb;
         rst = 0;
         ctr = 0;
         repeat(max) begin
-            write({$random, $random}, ctr, KEY, NONCE, AD, PT);
+            write({$random, $random}, ctr, `KEY, `NONCE, `AD, `PT);
             ctr = ctr + 1;
         end
         ctr = 0;

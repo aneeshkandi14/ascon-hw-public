@@ -11,4 +11,5 @@
 ../hdl/permutation/substitution_layer.v
 ../hdl/permutation/substitution_layer_ti.v
 ../hdl/roundcounter.v
+hash_parameters.v
 tb_hash.v

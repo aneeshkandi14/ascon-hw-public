@@ -1,6 +1,5 @@
 // Fault countermeasure
 module FC #(
-    parameter k = 128,
     parameter r = 64,
     parameter a = 12,
     parameter b = 12,
@@ -27,7 +26,7 @@ module FC #(
 
         if(TI == 1) begin
             Hash_ti #(
-                k,r,a,b,h,l,y
+                r,a,b,h,l,y
             ) d1 (
                 clk,
                 rst,
@@ -39,7 +38,7 @@ module FC #(
             ); 
 
             Hash_ti #(
-                k,r,a,b,h,l,y
+                r,a,b,h,l,y
             ) d2 (
                 clk,
                 rst,
@@ -51,7 +50,7 @@ module FC #(
             ); 
 
             Hash_ti #(
-                k,r,a,b,h,l,y
+                r,a,b,h,l,y
             ) d3 (
                 clk,
                 rst,
@@ -65,7 +64,7 @@ module FC #(
     
         else begin
             Hash #(
-                k,r,a,b,h,l,y
+                r,a,b,h,l,y
             ) d1 (
                 clk,
                 rst,
@@ -76,7 +75,7 @@ module FC #(
             );
 
             Hash #(
-                k,r,a,b,h,l,y
+                r,a,b,h,l,y
             ) d2 (
                 clk,
                 rst,
@@ -87,7 +86,7 @@ module FC #(
             );
 
             Hash #(
-                k,r,a,b,h,l,y
+                r,a,b,h,l,y
             ) d3 (
                 clk,
                 rst,
@@ -106,7 +105,7 @@ module FC #(
     else begin
         if(TI == 1) begin
             Hash_ti #(
-                k,r,a,b,h,l,y
+                r,a,b,h,l,y
             ) d1 (
                 clk,
                 rst,
@@ -120,7 +119,7 @@ module FC #(
         
         else begin
             Hash #(
-                k,r,a,b,h,l,y
+                r,a,b,h,l,y
             ) d1 (
                 clk,
                 rst,

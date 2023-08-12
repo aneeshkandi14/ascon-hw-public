@@ -13,4 +13,5 @@
 ../hdl/roundcounter.v
 ../hdl/encryption+decryption/fault_countermeasure.v
 ../hdl/encryption+decryption/ascon.v
+aead_parameters.v
 tb_enc+dec.v

@@ -1,5 +1,4 @@
 module Hash #(
-    parameter k = 128,
     parameter r = 64,
     parameter a = 12,
     parameter b = 12,
@@ -84,13 +83,12 @@ module Hash #(
                 ABSORB: begin
                     if(block_ctr == s-1) begin
                         state <= SQUEEZE;
-                        $display("%h",M[r*s-1 -: r]);
-                        S <= {Sr ^ M[r*s-1 -: r], Sc};
+                        S <= {Sr ^ M[r-1 : 0], Sc};
                     end
                     else if(permutation_ready && block_ctr != s)
                         S <= P_out;
 
-                    if (permutation_ready && block_ctr == s-1) 
+                    if (block_ctr == s-1) 
                         block_ctr <= 0;
                     else if(permutation_ready && block_ctr != s)
                         block_ctr <= block_ctr + 1; 
@@ -98,16 +96,12 @@ module Hash #(
 
                 // Squeeze Hash
                 SQUEEZE: begin
-                    if(permutation_ready && block_ctr == t) begin
+                    if(permutation_ready && block_ctr == t-1) begin
                         state <= DONE;
                         block_ctr <= 0;
+                        H[r-1 : 0] <= P_out[319 -: r];
                     end
-                    else if(permutation_ready && block_ctr == 0) begin
-                        S <= P_out;
-                        H[t*r-1 -: r] <= P_out[319 -: r];
-                        block_ctr <= block_ctr + 1;
-                    end
-                    else if(permutation_ready && block_ctr < t) begin
+                    else if(permutation_ready && block_ctr != t) begin
                         S <= P_out;
                         H[(t-block_ctr)*r-1 -: r] <= P_out[319 -: r];
                         block_ctr <= block_ctr + 1;

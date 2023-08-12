@@ -1,5 +1,4 @@
 module Ascon #(
-    parameter k = 128,
     parameter r = 64,
     parameter a = 12,
     parameter b = 12,
@@ -73,7 +72,7 @@ module Ascon #(
 
     // Instantiating Fault Countermeasure module
     FC #(
-        k,r,a,b,h,l,y,TI,FP
+        r,a,b,h,l,y,TI,FP
     ) f(
             clk,
             rst,

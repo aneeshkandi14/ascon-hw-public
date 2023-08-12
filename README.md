@@ -18,6 +18,34 @@ This repository contains accompanying HDL codes for the paper **Hardware Impleme
 - The proposed SBOXes for Threshold. Source: `ascon_sbox_ti/`
 
  ## Verifying the Code
-We have used `iverilog` verilog compiler and `gtkwave` tool for viewing the waveforms. The testbench directory contains the testbench, `tb_enc+dec.v`, and a bash script to run the test. Ensure all three files are in the same directory as `ascon.v`, and then run the bash script. The results will be copied to a text file where you can see the working. To view the waveforms, uncomment the line `gtkwave test.vcd` in the `run.sh` file.
+We have used `iverilog` verilog compiler and `gtkwave` tool for viewing the waveforms. The testbench directory contains the following testbenches:
+- Encryption + Decryption `tb_enc+dec.v`
+- Only Encryption `tb_encryption.v`
+- Only Decryption `tb_decryption.v`
+- Hash `tb_hash.v`
 
-The configuration of the ASCON variant can be changed by changing the different parameters in the `tb_enc+dec.v` file. The key, nonce, associated_data and plain_text values can also be changed in the same file. 
+To configure the code, use the `run.py` file. Enter the variant of ASCON and other data in this file. Note that you need not run this file as it is taken care by the makefile.
+
+To make the testing process easier, we have used a Makefile. Here's how you use it:
+- Make sure all the files and folders are organised in the same was as in this directory
+- Enter `make` into you console to see the list of options
+- In addition, you can view the waveforms for debugging purposes using gtkwave by adding `GTK=yes` along with the `make <x>` command.
+- You can view the results of the process in the `testcases.txt` file.
+
+Note that you can always manually enter the parameters in `aead_parameters.v` and `hash_parameters.v`. Make sure to comment the `python3 run.py` line in Makefile to use these parameters.
+
+## Example
+Here's an example on how to configure the files and verify the code
+### Setting Up the Parameters
+<img src="pictures/config.png" alt="Config Image"/>
+
+### Command to run AEAD setup
+```bash
+make ascon GTK=yes
+``` 
+
+### Results
+<img src="pictures/results.png" alt="Results Image"/>
+
+### GTK waveforms
+<img src="pictures/gtk.png" alt="Waveforms Image" width = "1500"/>
