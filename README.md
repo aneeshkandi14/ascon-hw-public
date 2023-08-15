@@ -35,7 +35,7 @@ To make the testing process easier, we have used a Makefile. Here's how you use 
 Note that you can always manually enter the parameters in `aead_parameters.v` and `hash_parameters.v`. Make sure to comment the `python3 run.py` line in Makefile to use these parameters.
 
 ## Example
-Here's an example on how to configure the files and verify the code
+<!-- Here is an example on how to configure the files and verify the code-->
 ### Setting Up the Parameters
 <img src="pictures/config.png" alt="Config Image"/>
 
@@ -47,5 +47,5 @@ make ascon GTK=yes
 ### Results
 <img src="pictures/results.png" alt="Results Image"/>
 
-### GTK waveforms
+### Simulation waveform (GTK)
 <img src="pictures/gtk.png" alt="Waveforms Image" width = "1500"/>
