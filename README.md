@@ -1,5 +1,5 @@
 # ASCON Hardware
-This repository contains accompanying HDL codes for the paper **Hardware Implementation of ASCON** available in [NIST LWC Workshop 2023](https://csrc.nist.gov/csrc/media/Events/2023/lightweight-cryptography-workshop-2023/documents/accepted-papers/07-hardware-implementation-of-ascon.pdf).
+This repository contains accompanying HDL codes for the paper **Hardware Implementation of ASCON**.
 
 ## Contents of the Repository
 - [Verilog codes for ASCON](https://github.com/aneeshkandi14/ascon-hw-public/tree/main/hdl) (HDL)
@@ -31,7 +31,7 @@ To make the testing process easier, we have used a Makefile. Here's how it can b
 
 Note that you can always manually enter the parameters in [aead_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/aead_parameters.v) and [hash_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/hash_parameters.v). Make sure to comment the `python3 run.py` line in Makefile to use these parameters.
 
-## How to run?
+## How to run
 <!-- Here is an example on how to configure the files and verify the code-->
 ### Setting Up the Parameters
 ```python
