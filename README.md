@@ -7,7 +7,7 @@ This repository contains accompanying HDL codes for the paper **Hardware Impleme
 - [Testbench for testing the implementation](https://github.com/aneeshkandi14/ascon-hw-public/tree/main/testbench) (testbench)
 
 ## Hierarchy of Verilog Modules
-This hierarchy is with respect to the [AEAD](https://github.com/aneeshkandi14/ascon-hw-public/tree/main/hdl/encryption%2Bdecryption) configuration. The other configurations: [Encryption + Tag Generation](https://github.com/aneeshkandi14/ascon-hw-public/tree/main/hdl/encryption), [Decryption + Tag Verification](https://github.com/aneeshkandi14/ascon-hw-public/tree/main/hdl/decryption) and [Ascon Hash](https://github.com/aneeshkandi14/ascon-hw-public/tree/main/hdl/hashing) follow the same hierarchy.
+The following hierarchy is with respect to the [AEAD](https://github.com/aneeshkandi14/ascon-hw-public/tree/main/hdl/encryption%2Bdecryption) configuration.
 - [`Ascon`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/hdl/encryption%2Bdecryption/ascon.v) is the top module containing the bit-wise wrapper and unwrapper modules. The unwrapper sends the data to the module `FC`.
 - [`FC`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/hdl/encryption%2Bdecryption/fault_countermeasure.v) module connects to the subsequent appropriate modules according to the parameters - `TI` and `FA`. If parameter `FA` is set to 1, then the process is triplicated, followed by the majority operation. The respective threshold processes are called if the TI parameter is set to 1.
 - [`Encryption_ti`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/hdl/encryption%2Bdecryption/ascon_encryption_ti.v), [`Decryption_ti`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/hdl/encryption%2Bdecryption/ascon_decryption_ti.v), [`Encryption`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/hdl/encryption%2Bdecryption/ascon_encryption.v) and [`Decryption`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/hdl/encryption%2Bdecryption/ascon_decryption.v) modules, called by the `FA` module, contain the ASCON FSM for encryption and decryption with or without threshold.
@@ -21,15 +21,15 @@ We have used `iverilog` verilog compiler and `gtkwave` tool for viewing the wave
 - Decryption + Tag Verification [tb_decryption.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/tb_decryption.v)
 - Hash [tb_hash.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/tb_hash.v)
 
-To configure the code, use the [run.py](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/run.py) file. Enter the variant of ASCON and other data in this file. Note that you need not run this file as it is taken care in the makefile itself.
+To configure the code, use the [run.py](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/run.py) file. Enter the variant of ASCON and other data in this file. It may be noted that this file is not needed to run as the task is taken care in the makefile itself.
 
-To make the testing process easier, we have used a Makefile. Here's how it can be used:
-- Make sure all the files and folders are organised in the same was as in this directory
+To make the testing process easier, we have used a Makefile. Here is how it can be used:
+- It is inherently assumed that all the files and folders are organised in the same way as in this repository.
 - Enter `make` into you console to see the list of options
 - In addition, you can view the waveforms for debugging purposes using gtkwave by adding `GTK=yes` along with the `make <x>` command.
 - You can view the results of the process in the [testcases.txt](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/testcases.txt) file.
 
-Note that you can always manually enter the parameters in [aead_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/aead_parameters.v) and [hash_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/hash_parameters.v). Make sure to comment the `python3 run.py` line in Makefile to use these parameters.
+It maybe noted that you can also manually enter the parameters in [aead_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/aead_parameters.v) and [hash_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/hash_parameters.v). In order to use this option, comment out the `python3 run.py` line in Makefile to use these parameters.
 
 ## How to run
 <!-- Here is an example on how to configure the files and verify the code-->
