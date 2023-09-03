@@ -25,14 +25,13 @@ To configure the code, use the [run.py](https://github.com/aneeshkandi14/ascon-h
 
 To make the testing process easier, we have used a Makefile. Here is how it can be used:
 - It is inherently assumed that all the files and folders are organised in the same way as in this repository.
-- Enter `make` into you console to see the list of options
-- In addition, you can view the waveforms for debugging purposes using gtkwave by adding `GTK=yes` along with the `make <x>` command.
-- You can view the results of the process in the [testcases.txt](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/testcases.txt) file.
+- Enter `make` in the console to see the list of options.
+- In addition, we can view the waveforms for debugging purposes using gtkwave by adding `GTK=yes` along with the `make <x>` command.
+- We can view the results of the process in the [testcases.txt](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/testcases.txt) file.
 
-It maybe noted that you can also manually enter the parameters in [aead_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/aead_parameters.v) and [hash_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/hash_parameters.v). In order to use this option, comment out the `python3 run.py` line in Makefile to use these parameters.
+It maybe noted that we can also manually enter the parameters in [aead_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/aead_parameters.v) and [hash_parameters.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/hash_parameters.v). In order to use this option, comment out the `python3 run.py` line in Makefile to use these parameters.
 
-## How to run
-<!-- Here is an example on how to configure the files and verify the code-->
+## How-to-run
 ### Setting Up the Parameters
 ```python
 variant        = "Ascon-128"   # "Ascon-Hash" for hash
