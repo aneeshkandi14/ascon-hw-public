@@ -17,9 +17,9 @@ The following hierarchy is with respect to the [AEAD](https://github.com/aneeshk
  ## Verifying the Code
 We have used `iverilog` verilog compiler and `gtkwave` tool for viewing the waveforms. The testbench directory contains the following testbenches:
 - AEAD: [tb_enc+dec.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/tb_enc%2Bdec.v)
-- Encryption + Tag Generation [tb_encryption.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/tb_encryption.v)
-- Decryption + Tag Verification [tb_decryption.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/tb_decryption.v)
-- Hash [tb_hash.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/tb_hash.v)
+- Encryption + Tag Generation: [tb_encryption.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/tb_encryption.v)
+- Decryption + Tag Verification: [tb_decryption.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/tb_decryption.v)
+- Hash: [tb_hash.v](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/testbench/tb_hash.v)
 
 To configure the code, use the [run.py](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/run.py) file. Enter the variant of ASCON and other data in this file. It may be noted that this file is not needed to run as the task is taken care in the makefile itself.
 
