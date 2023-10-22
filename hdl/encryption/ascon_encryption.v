@@ -36,6 +36,7 @@ module Encryption #(
     reg  [127:0]        Tag;
     reg  [127:0]        Tag_d;
     reg                 encryption_ready_1;
+    wire                encryption_ready;
     wire [190-k-1:0]    IV;
     reg  [319:0]        S;
     wire [r-1:0]        Sr;
@@ -50,6 +51,7 @@ module Encryption #(
     reg  [Y-1:0]        C_d;
     reg  [t:0]          block_ctr;  
     wire [4:0]          ctr;
+    reg [2:0] state;
 
     assign IV = k << 24 | r << 16 | a << 8 | b;
     assign {Sr,Sc} = S;
@@ -70,7 +72,6 @@ module Encryption #(
               PTCT              = 'd3,
               FINALIZE          = 'd4, 
               DONE              = 'd5;  
-    reg [2:0] state;
 
     // ---------------------------------------------------------------------------------------
     //                               FSM Starts here
