@@ -16,12 +16,7 @@ endmodule
 
 module sub_layer_ti_1 (
     input [63:0] x0_0,x1_0,x2_0,x3_0,x4_0,
-    input [    assign y0_2 = (x1_0 & x2_1) ^ (x2_0 & x1_1) ^ (x4_0 & x1_1);
-    assign y1_2 = (x2_0 & x3_1) ^ (x3_0 & x2_1);
-    assign y2_2 = (x3_0 & x4_1) ^ (x4_0 & x3_1);
-    assign y3_2 = (x0_0 & x4_1) ^ (x4_0 & x0_1);
-    assign y4_2 = (x0_0 & x1_1) ^ (x1_0 & x0_1);
-63:0] x0_1,x1_1,x2_1,x3_1,x4_1,
+    input [63:0] x0_1,x1_1,x2_1,x3_1,x4_1,
     input [63:0] x0_2,x1_2,x2_2,x3_2,x4_2,
 
     output [63:0] y0_1,y1_1,y2_1,y3_1,y4_1
