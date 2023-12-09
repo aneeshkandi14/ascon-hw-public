@@ -4,7 +4,7 @@
 `define b 6
 `define l 40
 `define y 40
-`define TI 0
+`define TI 1
 `define FP 0
 `define KEY 'h45fd61505fd7b2ec2b8db87be32c889d
 `define NONCE 'h8c8647c65dd7066cbb7ac082dd1a9edb
