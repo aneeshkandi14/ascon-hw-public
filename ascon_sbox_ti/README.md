@@ -1,4 +1,6 @@
-**Contents:**
+# ASCON SBox Threshold
+
+## Sharing
 - TI order = 1 (3 shares)
     - `ti_1_sbox1` ... `ti_1_sbox5` satisfy non-completeness and uniformity; [`ti_1_sbox6`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_1_sbox6.v) need not satisfy uniformity
 - TI order = 2 (4 shares)
@@ -11,5 +13,6 @@ Note that, `ti_1_sbox3` sharing is used in the Ascon permutation implementation.
 
 **Non-Completeness for sbox3:**
 
-**Known Issues:**
-- According to [[2]](https://ascon.iaik.tugraz.at/files/asconv12-nist.pdf), in ASCON SBox, `x0` is the MSB bit and `x4` is the LSB bit. The sage functions use `x4` as the MSB bit and `x0` as the LSB bit
+## Notes
+- These coordinate functions are generated from the [codes](https://github.com/anubhab001/sbox-threshold-public/tree/main/without-decomposition) (see the [paper](https://eprint.iacr.org/2023/633.pdf)) in [Sage](https://www.sagemath.org/). 
+- As per the [specification](https://ascon.iaik.tugraz.at/files/asconv12-nist.pdf) of the ASCON SBox, `x0` is the MSB bit and `x4` is the LSB bit; but it is the other way around in the in-built Sage functions.
