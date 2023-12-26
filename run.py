@@ -1,4 +1,5 @@
 import os
+from sys import argv
 
 def load_data_aead(variant="Ascon-128", ad="ASCON", pt="ascon", ct="ascon", ti=1, fp=1):
     assert variant in ["Ascon-128", "Ascon-128a", "Ascon-80pq"]
@@ -59,8 +60,10 @@ def load_data_hash(variant="Ascon-Hash", message="ascon", ti=1, fp=1, hashlength
         file.write("`define MESSAGE 'h" + mes + '\n')
 
 # Choose the ASCON variant
-variant        = "Ascon-128"
-# variant        = "Ascon-Hash"
+if argv[1] == 'aead':
+    variant = "Ascon-128"
+elif argv[1] == 'hash':
+    variant = "Ascon-Hash"
 
 # AEAD Data
 associateddata = b"ASCON"
@@ -68,11 +71,11 @@ plaintext      = b"ascon"
 ciphertext     = b"ascon"
 
 # Hash Data
-message        = b"ascon"
+message        = b"Hello World!"
 hashlength     = 32         # bytes
 
 # Configuration
-threshold = 0
+threshold = 1
 fault_protection = 0
 
 if variant in ["Ascon-128", "Ascon-128a", "Ascon-80pq"]:

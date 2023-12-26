@@ -1,0 +1,36 @@
+VCD info: dumpfile test.vcd opened for output.
+Start!
+Message:	48656c6c6f20576f726c6421
+Hashing Done! It took         88 clock cycles
+Hash:	0aa85426433e9d7bfdbbd1a416ed762a6abd89b0f7fc72d3b5d5c5cea7b12cbb
+VCD info: dumpfile test.vcd opened for output.
+Start!
+Message:	48656c6c6f20576f726c6421
+Hashing Done! It took         88 clock cycles
+Hash:	0aa85426433e9d7bfdbbd1a416ed762a6abd89b0f7fc72d3b5d5c5cea7b12cbb
+VCD info: dumpfile test.vcd opened for output.
+Start!
+Key:	00a14b66b34c7101e798a43505a17d58
+Nonce:	33b1ba07991290964c7d834e82a9e9b7
+AD:	4153434f4e
+PT:	6173636f6e
+Encryption Done! It took         39 clock cycles
+CT:	058d7f924a
+Tag:	2ef5cd71ce2d15ba2e72719e19a7865e
+Decryption Done! It took         38 clock cycles
+PT:	6173636f6e
+Tag:	2ef5cd71ce2d15ba2e72719e19a7865e
+Is message authenticated?:	1
+VCD info: dumpfile test.vcd opened for output.
+Start!
+Key:	3ffa75efbd1705fa8f9ced62e5bb0be3
+Nonce:	9691163337dd55217ea2a6b21eaa19b2
+AD:	4153434f4e
+PT:	6173636f6e
+Encryption Done! It took         39 clock cycles
+CT:	c21061905f
+Tag:	77d70aaf2501e3b27c1849182d2f2149
+Decryption Done! It took         38 clock cycles
+PT:	6173636f6e
+Tag:	77d70aaf2501e3b27c1849182d2f2149
+Is message authenticated?:	1

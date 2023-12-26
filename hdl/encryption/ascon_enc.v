@@ -1,12 +1,12 @@
 module Ascon #(
     parameter k = 128,            // Key size
-    parameter r = 128,            // Rate
+    parameter r = 64,             // Rate
     parameter a = 12,             // Initialization round no.
     parameter b = 6,              // Intermediate round no.
-    parameter l = 80,            // Length of associated data
-    parameter y = 80,             // Length of Plain Text
-    parameter TI = 0,              // 1 for Yes; else No
-    parameter FP = 0               // 1 for Yes; else No
+    parameter l = 32,             // Length of associated data
+    parameter y = 32,             // Length of Plain Text
+    parameter TI = 0,             // 1 for Yes; else No
+    parameter FP = 0              // 1 for Yes; else No
 )(
     input       clk,
     input       rst,

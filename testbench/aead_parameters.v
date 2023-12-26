@@ -6,8 +6,8 @@
 `define y 40
 `define TI 1
 `define FP 0
-`define KEY 'h45fd61505fd7b2ec2b8db87be32c889d
-`define NONCE 'h8c8647c65dd7066cbb7ac082dd1a9edb
+`define KEY 'h3ffa75efbd1705fa8f9ced62e5bb0be3
+`define NONCE 'h9691163337dd55217ea2a6b21eaa19b2
 `define AD 'h4153434f4e
 `define PT 'h6173636f6e
 `define CT 'h6173636f6e

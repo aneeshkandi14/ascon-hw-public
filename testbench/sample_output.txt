@@ -1,0 +1,87 @@
+ASCON-128 OUTPUTS
+
+Associated Data: "ASCON"
+AD Length: 40 bits
+
+Message: "ascon"
+PT Length: 40 bits
+Key:	b7234a4db9fb8b7c2aa5735ebef1180c
+Nonce:	8ebb295da81c74b58306d4e8362e2242
+AD:	4153434f4e
+PT:	6173636f6e
+Encryption Done! It took         39 clock cycles
+CT:	80cdf888e3
+Tag:	741c60eea203c9449aa7f6b9adde1dee
+Decryption Done! It took         38 clock cycles
+PT:	6173636f6e
+Tag:	741c60eea203c9449aa7f6b9adde1dee
+Is message authenticated?:	1
+
+Message: "encryption"
+PT Length: 80 bits
+Key:	2db083053e848cefa30007336c47a5a1
+Nonce:	3f3607dbce3503ba84f5843d623de056
+AD:	4153434f4e
+PT:	656e6372797074696f6e
+Encryption Done! It took         47 clock cycles
+CT:	87a59a2ea49b233259e3
+Tag:	402afdb55e031ce7ddef99b7f7709d1c
+Decryption Done! It took         46 clock cycles
+PT:	656e6372797074696f6e
+Tag:	402afdb55e031ce7ddef99b7f7709d1c
+Is message authenticated?:	1
+
+Message: "decryption"
+PT Length: 80 bits!
+Key:	cfbd99ce203c63d00bfee29edef2cfe6
+Nonce:	242854af6515a30fc8df32f1263e0007
+AD:	4153434f4e
+PT:	64656372797074696f6e
+Encryption Done! It took         47 clock cycles
+CT:	4c8d7a7a82dc5324351e
+Tag:	63a92920c6f8ca69768cce584c08f906
+Decryption Done! It took         46 clock cycles
+PT:	64656372797074696f6e
+Tag:	63a92920c6f8ca69768cce584c08f906
+Is message authenticated?:	1
+
+Message: "Hello World!"
+PT Length: 96 bits
+Key:	5362006eff0b33bc8bb9950abdb242fc
+Nonce:	1ccfafbc6dc738283ca9fe21ce0fccaa
+AD:	4153434f4e
+PT:	48656c6c6f20576f726c6421
+Encryption Done! It took         47 clock cycles
+CT:	24cefa36227cb37b5149860a
+Tag:	579c9a31342638cddeadedc34d9ce2b3
+Decryption Done! It took         46 clock cycles
+PT:	48656c6c6f20576f726c6421
+Tag:	579c9a31342638cddeadedc34d9ce2b3
+Is message authenticated?:	1
+
+PT Length: 512 bits
+Key:	5362006eff0b33bc8bb9950abdb242fc
+Nonce:	1ccfafbc6dc738283ca9fe21ce0fccaa
+AD:	4153434f4e
+PT:	02c895cb92d79f195ed9e3e2af89ae307059104aaa819b9a987a76cf7cf51e6e02c895cb92d79f195ed9e3e2af89ae307059104aaa819b9a987a76cf7cf51e6e
+Encryption Done! It took        103 clock cycles
+CT:	6e630391df8b7b0d99682d382d7a74ec7014d1db7fdcce5359717c02dc4b8b4047ab889d94b4f32e2d77e82e35a1f10ee4c1ae13527e95fb2b135a927dfd98a0
+Tag:	eb0f295e23be73266c3b6859486fa5f1
+Decryption Done! It took        102 clock cycles
+PT:	02c895cb92d79f195ed9e3e2af89ae307059104aaa819b9a987a76cf7cf51e6e02c895cb92d79f195ed9e3e2af89ae307059104aaa819b9a987a76cf7cf51e6e
+Tag:	eb0f295e23be73266c3b6859486fa5f1
+Is message authenticated?:	1
+
+ASCON-HASH OUTPUTS
+
+Message: 'ascon'
+Length: 40 bits
+Message:	6173636f6e
+Hashing Done! It took         74 clock cycles
+Hash:	02c895cb92d79f195ed9e3e2af89ae307059104aaa819b9a987a76cf7cf51e6e
+
+Message: 'Hello World!'
+Length: 96 bits
+Message:	48656c6c6f20576f726c6421
+Hashing Done! It took         88 clock cycles
+Hash:	0aa85426433e9d7bfdbbd1a416ed762a6abd89b0f7fc72d3b5d5c5cea7b12cbb
