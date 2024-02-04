@@ -1,10 +1,10 @@
-module Ascon #(
+module Ascon_hash #(
     parameter r = 64,
     parameter a = 12,
     parameter b = 12,
     parameter h = 256,
     parameter l = 256,
-    parameter y = 40,
+    parameter y = 32,
     parameter TI = 0,              // 1 for Yes; else No
     parameter FP = 0               // 1 for Yes; else No
 )(
