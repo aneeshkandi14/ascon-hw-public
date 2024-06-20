@@ -2,7 +2,7 @@
 
 ## Sharing
 - TI order = 1 (3 shares)
-    - `ti_1_sbox1` ... `ti_1_sbox5` satisfy non-completeness and uniformity; [`ti_1_sbox6`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_1_sbox6.v) may not satisfy uniformity
+    - [`ti_1_sbox1`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_1_sbox1.v), [`ti_1_sbox2`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_1_sbox2.v), [`ti_1_sbox3`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_1_sbox3.v), [`ti_1_sbox4`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_1_sbox4.v), [`ti_1_sbox5`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_1_sbox5.v) satisfy non-completeness and uniformity; [`ti_1_sbox6`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_1_sbox6.v) may not satisfy uniformity
 - TI order = 2 (4 shares)
     - [`ti_2_sbox1`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_2_sbox1.v) satisfies non-completeness and uniformity; [`ti_2_sbox2`](https://github.com/aneeshkandi14/ascon-hw-public/blob/main/ascon_sbox_ti/ti_2_sbox2.v) may not satisfy uniformity
 
