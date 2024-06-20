@@ -1,6 +1,5 @@
 # ASCON Hardware
-This repository contains accompanying HDL codes for the paper **Hardware Implementation of ASCON** by Kandi et al. The paper is accepted in [ISVLSI-2024](https://www.ieee-isvlsi.org/ISVLSI_2024_Website/), an extended version of the paper is available on [IACR ePrint](https://eprint.iacr.org/2024/984) (an earlier version of the paper is available as 
-[NIST LWC Workshop 2023](https://csrc.nist.gov/csrc/media/Events/2023/lightweight-cryptography-workshop-2023/documents/accepted-papers/07-hardware-implementation-of-ascon.pdf)).
+This repository contains accompanying HDL codes for the paper **Hardware Implementation of ASCON** by Kandi et al. The paper is accepted in [ISVLSI-2024](https://www.ieee-isvlsi.org/ISVLSI_2024_Website/), an extended version of the paper is available on [IACR ePrint](https://eprint.iacr.org/2024/984) (an early version of this paper is available on [NIST LWC Workshop 2023](https://csrc.nist.gov/csrc/media/Events/2023/lightweight-cryptography-workshop-2023/documents/accepted-papers/07-hardware-implementation-of-ascon.pdf)).
 
 ## Contents of the Repository
 - [Verilog codes for ASCON](https://github.com/aneeshkandi14/ascon-hw-public/tree/main/hdl) (HDL)
