@@ -25,13 +25,13 @@ This directory contains diagrams generated for ASIC layout
 ```
 
 # Files
-* [ASIC layout of ascon](./ascon_00_PT32_AD32.place.gif)
-* [ASIC layout of encap module](./ascon_01_PT32_AD32.place.gif)
-* [ASIC layout of encap module](./ascon_10_PT32_AD32.place.gif)
-* [ASIC layout of encap module](./ascon_11_PT32_AD32.place.gif)
-* [ASIC layout of encap module](./ascon_hash_00_PT32_AD32.place.gif)
-* [ASIC layout of encap module](./ascon_hash_01_PT32_AD32.place.gif)
-* [ASIC layout of encap module](./ascon_hash_10_PT32_AD32.place.gif)
-* [ASIC layout of encap module](./ascon_hash_11_PT32_AD32.place.gif)
+* [ASIC layout of ascon, unprotected](./ascon_00_PT32_AD32.place.gif)
+* [ASIC layout of ascon, implemented with Fault protection](./ascon_01_PT32_AD32.place.gif)
+* [ASIC layout of ascon, implemented with Threshold implementation](./ascon_10_PT32_AD32.place.gif)
+* [ASIC layout of ascon, implemented with Threshold implementation and Fault protection](./ascon_11_PT32_AD32.place.gif)
+* [ASIC layout of ascon hashing, unprotected](./ascon_hash_00_PT32_AD32.place.gif)
+* [ASIC layout of ascon hashing, implemented with Fault protection](./ascon_hash_01_PT32_AD32.place.gif)
+* [ASIC layout of ascon hashing, implemented with Threshold implementation](./ascon_hash_10_PT32_AD32.place.gif)
+* [ASIC layout of ascon hashing, implemented with Threshold implementation and Fault protection](./ascon_hash_11_PT32_AD32.place.gif)
 
 
