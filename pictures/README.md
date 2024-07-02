@@ -6,18 +6,32 @@ This directory contains diagrams generated for ASIC layout
 .
 ├── README.md
 ├── gtk.png
-├── asci_layout_diagrams/ascon_00.pdf
-├── tvla_FFT_protected.pdf
-├── tvla_FFT_unprotected.pdf
-├── tvla_GEF_protected.pdf
-└── tvla_GEF_unprotected.pdf
+├── ascon_00_PT32_AD32.amoeba.gif
+├── ascon_00_PT32_AD32.place.gif
+├── ascon_01_PT32_AD32.amoeba.gif
+├── ascon_01_PT32_AD32.place.gif
+├── ascon_10_PT32_AD32.amoeba.gif
+├── ascon_10_PT32_AD32.place.gif
+├── ascon_11_PT32_AD32.amoeba.gif
+├── ascon_11_PT32_AD32.place.gif
+├── ascon_hash_00_PT32_AD32.amoeba.gif
+├── ascon_hash_00_PT32_AD32.place.gif
+├── ascon_hash_01_PT32_AD32.amoeba.gif
+├── ascon_hash_01_PT32_AD32.place.gif
+├── ascon_hash_10_PT32_AD32.amoeba.gif
+├── ascon_hash_10_PT32_AD32.place.gif
+├── ascon_hash_11_PT32_AD32.amoeba.gif
+└── ascon_hash_11_PT32_AD32.place.gif
 ```
 
 # Files
-* [ASIC layout of encap module](./layout_encap.pdf)
-* [ASIC layout of decap module](./layout_decap.pdf)
-* [ASIC layout of keygen module](./layout_keygen.pdf)
-* [TVLA analysis results of additive FFT module with Side-channle attacks (SCA) countermeasures](./tvla_FFT_protected.pdf)
-* [TVLA analysis results of additive FFT module without SCA countermeasures](./tvla_FFT_unprotected.pdf)
-* [TVLA analysis results of Gaussian elimination module with SCA countermeasures](./tvla_GEF_protected.pdf)
-* [TVLA analysis results of Gaussian elimination module without SCA countermeasures](./tvla_GEF_unprotected.pdf)
+* [ASIC layout of ascon](./ascon_00_PT32_AD32.place.gif)
+* [ASIC layout of encap module](./ascon_01_PT32_AD32.place.gif)
+* [ASIC layout of encap module](./ascon_10_PT32_AD32.place.gif)
+* [ASIC layout of encap module](./ascon_11_PT32_AD32.place.gif)
+* [ASIC layout of encap module](./ascon_hash_00_PT32_AD32.place.gif)
+* [ASIC layout of encap module](./ascon_hash_01_PT32_AD32.place.gif)
+* [ASIC layout of encap module](./ascon_hash_10_PT32_AD32.place.gif)
+* [ASIC layout of encap module](./ascon_hash_11_PT32_AD32.place.gif)
+
+
