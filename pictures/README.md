@@ -1,12 +1,12 @@
 # Diagrams
-This directory contains diagrams generated for TVLA and ASIC layout
+This directory contains diagrams generated for ASIC layout
 
 # Directory Structure
 ```
 .
 ├── README.md
-├── layout_encap.pdf
-├── layout_decap.pdf
+├── gtk.png
+├── asci_layout_diagrams/ascon_00.pdf
 ├── tvla_FFT_protected.pdf
 ├── tvla_FFT_unprotected.pdf
 ├── tvla_GEF_protected.pdf
