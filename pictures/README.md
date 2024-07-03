@@ -6,6 +6,7 @@ This directory contains diagrams generated for ASIC layout
 .
 ├── README.md
 ├── gtk.png
+├── Colour_mapping_details.png
 ├── ascon_00_PT32_AD32.amoeba.gif
 ├── ascon_00_PT32_AD32.place.gif
 ├── ascon_01_PT32_AD32.amoeba.gif
@@ -25,6 +26,7 @@ This directory contains diagrams generated for ASIC layout
 ```
 
 # Files
+* [Colour mapping details of different layer and highlighted module](./Colour_mapping_details.png)
 * [ASIC layout of ascon, unprotected](./ascon_00_PT32_AD32.place.gif)
 * [ASIC layout of ascon, implemented with Fault protection](./ascon_01_PT32_AD32.place.gif)
 * [ASIC layout of ascon, implemented with Threshold implementation](./ascon_10_PT32_AD32.place.gif)
